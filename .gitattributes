@@ -1,0 +1,2 @@
+# Keep the pinned third-party bundle byte-for-byte as distributed upstream.
+js/vendor/supabase.js -whitespace

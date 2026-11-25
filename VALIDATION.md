@@ -11,6 +11,7 @@
 - Security and performance advisors returned no notices.
 - Supabase browser SDK 2.119.2 vendored with its MIT license; no runtime CDN dependency.
 - AI controls removed and client disabled. No AI function deployed to the new project.
+- GitHub's Ubuntu runner also passed all 37 tests and the file checks. HTTP checks of the public Pages site returned 200 for the updated app shell, the new Supabase config, and the v2 service worker. A metadata-readiness step handles the delayed artifact visibility observed during deployment.
 
 ## Remaining verification
 

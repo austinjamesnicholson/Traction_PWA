@@ -33,6 +33,28 @@ jobs:
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
+      - name: Wait for deployment artifact metadata
+        env:
+          PAGES_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import { setTimeout } from 'node:timers/promises';
+          const url = `${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/actions/runs/${process.env.GITHUB_RUN_ID}/artifacts`;
+          for (let attempt = 0; attempt < 8; attempt++) {
+            const response = await fetch(url, {headers: {
+              Authorization: `Bearer ${process.env.PAGES_TOKEN}`,
+              Accept: 'application/vnd.github+json'
+            }});
+            if (!response.ok) throw new Error(`Artifact check failed (${response.status})`);
+            const data = await response.json();
+            if (data.artifacts?.some(a => a.name === 'github-pages' && !a.expired)) {
+              console.log('Deployment artifact is available.');
+              process.exit(0);
+            }
+            await setTimeout(3000);
+          }
+          throw new Error('Deployment artifact metadata is not available yet.');
+          JS
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
