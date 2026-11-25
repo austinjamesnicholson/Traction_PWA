@@ -1,0 +1,9 @@
+﻿project_id = "traction-pwa"
+
+[auth]
+enabled = true
+site_url = "http://localhost:4173"
+enable_anonymous_sign_ins = true
+
+[functions.workout-recommendation]
+verify_jwt = true

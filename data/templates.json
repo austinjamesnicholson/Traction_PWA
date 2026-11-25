@@ -1,0 +1,341 @@
+[
+  {
+    "id": "Austin Push",
+    "name": "Austin Push",
+    "subtitle": "Chest, shoulders, triceps",
+    "exerciseType": "Push",
+    "items": [
+      {
+        "id": "austin_push_incline_press",
+        "title": "Start Here",
+        "subtitle": "Open your main press first.",
+        "kind": "singleExercise",
+        "exercises": ["Dumbbell Incline Press"]
+      },
+      {
+        "id": "austin_push_cable_chest_flye",
+        "title": "Chest Options",
+        "subtitle": "Choose the variation you want today.",
+        "kind": "singleExercise",
+        "exercises": ["Cable Chest Flyes"]
+      },
+      {
+        "id": "austin_push_dips",
+        "title": "Chest Options",
+        "subtitle": "Choose the variation you want today.",
+        "kind": "singleExercise",
+        "exercises": ["Dips"]
+      },
+      {
+        "id": "austin_push_lateral_raise",
+        "title": "Lateral Raise",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Dumbbell Lateral Raises"]
+      },
+      {
+        "id": "austin_push_tricep_pressdown",
+        "title": "Triceps Finish",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Tricep Pressdown"]
+      }
+    ]
+  },
+  {
+    "id": "Austin Pull",
+    "name": "Austin Pull",
+    "subtitle": "Back and biceps",
+    "exerciseType": "Pull",
+    "items": [
+      {
+        "id": "austin_pull_lat_pulldown_neutral",
+        "title": "Main Back Work",
+        "subtitle": "Pick the pulling movement you want first.",
+        "kind": "singleExercise",
+        "exercises": ["Lat Pulldown, Neutral Grip"]
+      },
+      {
+        "id": "austin_pull_chest_support_row_pl",
+        "title": "Main Back Work",
+        "subtitle": "Pick the pulling movement you want first.",
+        "kind": "singleExercise",
+        "exercises": ["Chest-Supported Row, Plate Loaded Machine"]
+      },
+      {
+        "id": "austin_pull_archer_row",
+        "title": "Main Back Work",
+        "subtitle": "Pick the pulling movement you want first.",
+        "kind": "singleExercise",
+        "exercises": ["Archer Rows"]
+      },
+      {
+        "id": "austin_pull_straight_arm",
+        "title": "Lat Isolation",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Straight-Arm Pulldowns"]
+      },
+      {
+        "id": "austin_pull_dumbbell_hammer_curl",
+        "title": "Lat Isolation",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Dumbbell Hammer Curls"]
+      },
+      {
+        "id": "austin_pull_arm_options",
+        "title": "Grip and Arms",
+        "subtitle": "Choose the arm work that fits today.",
+        "kind": "exerciseOptions",
+        "exercises": ["Wrist Curls, Dumbbell", "Wrist Curls, Kettlebell"]
+      }
+    ]
+  },
+  {
+    "id": "Austin Legs",
+    "name": "Austin Legs",
+    "subtitle": "Quads, hamstrings, glutes, calves",
+    "exerciseType": "Legs",
+    "items": [
+      {
+        "id": "austin_legs_deadlift",
+        "title": "Posterior Chain",
+        "subtitle": "Start with your main hinge.",
+        "kind": "singleExercise",
+        "exercises": ["Barbell Deadlift"]
+      },
+      {
+        "id": "austin_legs_leg_press",
+        "title": "Quad Work",
+        "subtitle": "Choose one or work through both over time.",
+        "kind": "singleExercise",
+        "exercises": ["Leg Press"]
+      },
+      {
+        "id": "austin_legs_leg_extension",
+        "title": "Quad Work",
+        "subtitle": "Choose one or work through both over time.",
+        "kind": "singleExercise",
+        "exercises": ["Leg Extension"]
+      },
+      {
+        "id": "austin_legs_hamstrings",
+        "title": "Hamstrings",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Seated Leg Curl"]
+      },
+      {
+        "id": "austin_legs_calf_raise",
+        "title": "Calves",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Machine Standing Calf Raise"]
+      }
+    ]
+  },
+  {
+    "id": "Lizzie Push",
+    "name": "Lizzie Push",
+    "subtitle": "Chest, shoulders, and triceps",
+    "exerciseType": "Push",
+    "items": [
+      {
+        "id": "lizzie_push_chest_option_1",
+        "title": "Chest Option 1",
+        "subtitle": "Choose one of these chest movements.",
+        "kind": "exerciseOptions",
+        "exercises": ["Machine Chest Flye", "Dumbbell Bench Press"]
+      },
+      {
+        "id": "lizzie_push_chest_option_2",
+        "title": "Chest Option 2",
+        "subtitle": "Choose another chest variation.",
+        "kind": "exerciseOptions",
+        "exercises": ["Push Ups", "Dumbbell Incline Press"]
+      },
+      {
+        "id": "lizzie_push_shoulders_option_1",
+        "title": "Shoulders Option 1",
+        "subtitle": "Pick your shoulder work for today.",
+        "kind": "exerciseOptions",
+        "exercises": ["Dumbbell Shoulder Press", "Dumbbell Lateral Raises"]
+      },
+      {
+        "id": "lizzie_push_shoulders_option_2",
+        "title": "Shoulders Option 2",
+        "subtitle": "Alternate shoulder pairing.",
+        "kind": "exerciseOptions",
+        "exercises": ["Cable Lateral Raise", "Barbell Overhead Press"]
+      },
+      {
+        "id": "lizzie_push_triceps",
+        "title": "Triceps",
+        "subtitle": "Choose a triceps finisher.",
+        "kind": "exerciseOptions",
+        "exercises": ["Overhead Tricep Extension", "Tricep Pushdown"]
+      },
+      {
+        "id": "lizzie_push_core_circuit",
+        "title": "Core Circuit",
+        "subtitle": "Circuit support is planned for 0.1.6.",
+        "kind": "circuit",
+        "exercises": ["Bicycle Kicks", "Russian Twists", "Plank"]
+      }
+    ]
+  },
+  {
+    "id": "Lizzie Pull",
+    "name": "Lizzie Pull",
+    "subtitle": "Back and biceps",
+    "exerciseType": "Pull",
+    "items": [
+      {
+        "id": "lizzie_pull_back_option_1",
+        "title": "Back Option 1",
+        "subtitle": "Choose one of these pulling movements.",
+        "kind": "exerciseOptions",
+        "exercises": [
+          "Lat Pulldown, Cable",
+          "Seated Cable Row",
+          "Reverse Cable Flye"
+        ]
+      },
+      {
+        "id": "lizzie_pull_back_option_2",
+        "title": "Back Option 2",
+        "subtitle": "Alternate pulling group.",
+        "kind": "exerciseOptions",
+        "exercises": [
+          "Assisted Pull-Up",
+          "Single-Arm Dumbbell Row",
+          "Face Pull"
+        ]
+      },
+      {
+        "id": "lizzie_pull_bicep_curl",
+        "title": "Biceps Curl",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Dumbbell Bicep Curl"]
+      },
+      {
+        "id": "lizzie_pull_hammer_curl",
+        "title": "Hammer Curl",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Hammer Curls, Dumbbell"]
+      },
+      {
+        "id": "lizzie_pull_bicep_options",
+        "title": "Additional Biceps",
+        "subtitle": "Choose an extra curl variation.",
+        "kind": "exerciseOptions",
+        "exercises": ["Cable Curl", "Incline Dumbbell Curl"]
+      },
+      {
+        "id": "lizzie_pull_core_circuit",
+        "title": "Core Circuit",
+        "subtitle": "Circuit support is planned for 0.1.6.",
+        "kind": "circuit",
+        "exercises": ["Bicycle Kicks", "Russian Twists", "Plank"]
+      }
+    ]
+  },
+  {
+    "id": "Lizzie Legs",
+    "name": "Lizzie Legs",
+    "subtitle": "Glutes, quads, and hamstrings",
+    "exerciseType": "Legs",
+    "items": [
+      {
+        "id": "lizzie_legs_goblet_squat",
+        "title": "Goblet Squat",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Goblet Squat"]
+      },
+      {
+        "id": "lizzie_legs_leg_press",
+        "title": "Leg Press",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["Leg Press"]
+      },
+      {
+        "id": "lizzie_legs_glute_options_1",
+        "title": "Glute Option 1",
+        "subtitle": "Choose one glute-focused movement.",
+        "kind": "exerciseOptions",
+        "exercises": ["Hip Thrust", "Walking Lunge"]
+      },
+      {
+        "id": "lizzie_legs_glute_options_2",
+        "title": "Glute Option 2",
+        "subtitle": "Alternate lower-body pairing.",
+        "kind": "exerciseOptions",
+        "exercises": ["Bulgarian Split Squat", "Dumbbell Romanian Deadlift"]
+      },
+      {
+        "id": "lizzie_legs_hamstring_options",
+        "title": "Hamstring Options",
+        "subtitle": "Choose your machine hamstring work.",
+        "kind": "exerciseOptions",
+        "exercises": [
+          "Seated Machine Hamstring Curl",
+          "Lying Machine Hamstring Curl"
+        ]
+      },
+      {
+        "id": "lizzie_legs_glute_ham_raise",
+        "title": "Glute-Ham Raise",
+        "subtitle": "Single exercise block.",
+        "kind": "singleExercise",
+        "exercises": ["45deg Glute-Ham Raise"]
+      },
+      {
+        "id": "lizzie_legs_free_options",
+        "title": "Free Choice Lower Body",
+        "subtitle": "Choose an extra lower-body movement.",
+        "kind": "exerciseOptions",
+        "exercises": ["Cable Kickback", "Dumbbell Step-Up", "Leg Extension"]
+      },
+      {
+        "id": "lizzie_legs_core_circuit",
+        "title": "Core Circuit",
+        "subtitle": "Circuit support is planned for 0.1.6.",
+        "kind": "circuit",
+        "exercises": ["Weighted Sit Up", "Heel Tap", "Plank"]
+      }
+    ]
+  },
+  {
+    "id": "Lizzie Wednesday Cycle",
+    "name": "Lizzie Wednesday Cycle",
+    "subtitle": "Wednesday voluntary torture session",
+    "exerciseType": "Cardio",
+    "items": []
+  },
+  {
+    "id": "Cardio",
+    "name": "Cardio",
+    "subtitle": "Cardio-focused session",
+    "exerciseType": "Cardio",
+    "items": []
+  },
+  {
+    "id": "Full Body",
+    "name": "Full Body",
+    "subtitle": "Mixed full-body session",
+    "exerciseType": "Full Body",
+    "items": []
+  },
+  {
+    "id": "Group Fitness",
+    "name": "Group Fitness",
+    "subtitle": "Class or coached workout",
+    "exerciseType": "Group Fitness",
+    "items": []
+  }
+]

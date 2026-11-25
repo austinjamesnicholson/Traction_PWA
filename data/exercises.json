@@ -1,0 +1,530 @@
+[
+  {
+    "id": "45deg_glute_ham_raise",
+    "name": "45deg Glute-Ham Raise",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "archer_rows",
+    "name": "Archer Rows",
+    "type": "Pull",
+    "majorMuscle": "Rear Delts",
+    "minorMuscle": "",
+    "setupNotes": "Cable Height"
+  },
+  {
+    "id": "assisted_pull_up",
+    "name": "Assisted Pull-Up",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "barbell_bench_press",
+    "name": "Barbell Bench Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": " ",
+    "setupNotes": ""
+  },
+  {
+    "id": "barbell_deadlift",
+    "name": "Barbell Deadlift",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "barbell_incline_press",
+    "name": "Barbell Incline Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": "Seat just above 5"
+  },
+  {
+    "id": "barbell_overhead_press",
+    "name": "Barbell Overhead Press",
+    "type": "Push",
+    "majorMuscle": "Front Delts",
+    "minorMuscle": "Triceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "barbell_squats",
+    "name": "Barbell Squats",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "belt_squats",
+    "name": "Belt Squats",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "bicycle_kicks",
+    "name": "Bicycle Kicks",
+    "type": "Core",
+    "majorMuscle": "Abs",
+    "minorMuscle": "Obliques",
+    "setupNotes": ""
+  },
+  {
+    "id": "bulgarian_split_squat",
+    "name": "Bulgarian Split Squat",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "cable_chest_flyes",
+    "name": "Cable Chest Flyes",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": ""
+  },
+  {
+    "id": "cable_curl",
+    "name": "Cable Curl",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "Forearms",
+    "setupNotes": ""
+  },
+  {
+    "id": "cable_kickback",
+    "name": "Cable Kickback",
+    "type": "Legs",
+    "majorMuscle": "Glutes",
+    "minorMuscle": "Hamstrings",
+    "setupNotes": ""
+  },
+  {
+    "id": "cable_lateral_raise",
+    "name": "Cable Lateral Raise",
+    "type": "Push",
+    "majorMuscle": "Side Delts",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "chest_supported_row_plate_loaded_machine",
+    "name": "Chest-Supported Row, Plate Loaded Machine",
+    "type": "Pull",
+    "majorMuscle": "Rhomboids",
+    "minorMuscle": " ",
+    "setupNotes": "Seat height: 4"
+  },
+  {
+    "id": "close_grip_pulldowns",
+    "name": "Close-Grip Pulldowns",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": " ",
+    "setupNotes": ""
+  },
+  {
+    "id": "dips",
+    "name": "Dips",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": " ",
+    "setupNotes": "Safety bars for the squat rack at level 13"
+  },
+  {
+    "id": "dumbbell_bench_press",
+    "name": "Dumbbell Bench Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_bicep_curl",
+    "name": "Dumbbell Bicep Curl",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "Forearms",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_hammer_curls",
+    "name": "Dumbbell Hammer Curls",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_incline_press",
+    "name": "Dumbbell Incline Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": "Bench at 30deg"
+  },
+  {
+    "id": "dumbbell_lateral_raises",
+    "name": "Dumbbell Lateral Raises",
+    "type": "Push",
+    "majorMuscle": "Side Delts",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_romanian_deadlift",
+    "name": "Dumbbell Romanian Deadlift",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_shoulder_press",
+    "name": "Dumbbell Shoulder Press",
+    "type": "Push",
+    "majorMuscle": "Front Delts",
+    "minorMuscle": "Triceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_step_up",
+    "name": "Dumbbell Step-Up",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "face_pull",
+    "name": "Face Pull",
+    "type": "Pull",
+    "majorMuscle": "Rear Delts",
+    "minorMuscle": "Rhomboids",
+    "setupNotes": ""
+  },
+  {
+    "id": "goblet_squat",
+    "name": "Goblet Squat",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "hammer_curls_dumbbell",
+    "name": "Hammer Curls, Dumbbell",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "heel_tap",
+    "name": "Heel Tap",
+    "type": "Core",
+    "majorMuscle": "Abs",
+    "minorMuscle": "Obliques",
+    "setupNotes": ""
+  },
+  {
+    "id": "hip_thrust",
+    "name": "Hip Thrust",
+    "type": "Legs",
+    "majorMuscle": "Glutes",
+    "minorMuscle": "Hamstrings",
+    "setupNotes": ""
+  },
+  {
+    "id": "incline_dumbbell_curl",
+    "name": "Incline Dumbbell Curl",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "Forearms",
+    "setupNotes": ""
+  },
+  {
+    "id": "lat_pulldown_cable",
+    "name": "Lat Pulldown, Cable",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "lat_pulldown_neutral_grip",
+    "name": "Lat Pulldown, Neutral Grip",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "lat_pulldowns",
+    "name": "Lat Pulldowns",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "leg_curls",
+    "name": "Leg Curls",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "",
+    "setupNotes": "Ankle pos: L\nROM: 4\nSeat: just behind 4"
+  },
+  {
+    "id": "leg_extension",
+    "name": "Leg Extension",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "leg_extensions",
+    "name": "Leg Extensions",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "leg_press",
+    "name": "Leg Press",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "",
+    "setupNotes": "Regular Sliding Leg Press Machine\nFeet shoulder width, toes slightly out."
+  },
+  {
+    "id": "lying_machine_hamstring_curl",
+    "name": "Lying Machine Hamstring Curl",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "machine_chest_flye",
+    "name": "Machine Chest Flye",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": ""
+  },
+  {
+    "id": "machine_chest_press",
+    "name": "Machine Chest Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "machine_standing_calf_raise",
+    "name": "Machine Standing Calf Raise",
+    "type": "Legs",
+    "majorMuscle": "Calves",
+    "minorMuscle": "",
+    "setupNotes": "Machine height 3"
+  },
+  {
+    "id": "overhead_tricep_extension",
+    "name": "Overhead Tricep Extension",
+    "type": "Push",
+    "majorMuscle": "Triceps",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "pec_dec_chest_flyes",
+    "name": "Pec Dec Chest Flyes",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "",
+    "setupNotes": "Seat setting just below 4"
+  },
+  {
+    "id": "plank",
+    "name": "Plank",
+    "type": "Core",
+    "majorMuscle": "Abs",
+    "minorMuscle": "Obliques",
+    "setupNotes": ""
+  },
+  {
+    "id": "preacher_curls",
+    "name": "Preacher Curls",
+    "type": "Pull",
+    "majorMuscle": "Biceps",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "pull_ups",
+    "name": "Pull Ups",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "push_ups",
+    "name": "Push Ups",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Triceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "reverse_cable_flye",
+    "name": "Reverse Cable Flye",
+    "type": "Pull",
+    "majorMuscle": "Rear Delts",
+    "minorMuscle": "Rhomboids",
+    "setupNotes": ""
+  },
+  {
+    "id": "russian_twists",
+    "name": "Russian Twists",
+    "type": "Core",
+    "majorMuscle": "Obliques",
+    "minorMuscle": "Abs",
+    "setupNotes": ""
+  },
+  {
+    "id": "seated_cable_row",
+    "name": "Seated Cable Row",
+    "type": "Pull",
+    "majorMuscle": "Rhomboids",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "seated_calf_raise",
+    "name": "Seated Calf Raise",
+    "type": "Legs",
+    "majorMuscle": "Calves",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "seated_leg_curl",
+    "name": "Seated Leg Curl",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "seated_machine_hamstring_curl",
+    "name": "Seated Machine Hamstring Curl",
+    "type": "Legs",
+    "majorMuscle": "Hamstrings",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "shrugs_dumbbell",
+    "name": "Shrugs, Dumbbell",
+    "type": "Pull",
+    "majorMuscle": "Traps",
+    "minorMuscle": "Forearms",
+    "setupNotes": ""
+  },
+  {
+    "id": "single_arm_dumbbell_row",
+    "name": "Single-Arm Dumbbell Row",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "Biceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "straight_arm_pulldowns",
+    "name": "Straight-Arm Pulldowns",
+    "type": "Pull",
+    "majorMuscle": "Lats",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "tricep_pressdown",
+    "name": "Tricep Pressdown",
+    "type": "Push",
+    "majorMuscle": "Triceps",
+    "minorMuscle": "",
+    "setupNotes": "Curl Bar Attachment"
+  },
+  {
+    "id": "tricep_pushdown",
+    "name": "Tricep Pushdown",
+    "type": "Push",
+    "majorMuscle": "Triceps",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "walking_lunge",
+    "name": "Walking Lunge",
+    "type": "Legs",
+    "majorMuscle": "Quads",
+    "minorMuscle": "Glutes",
+    "setupNotes": ""
+  },
+  {
+    "id": "weighted_sit_up",
+    "name": "Weighted Sit Up",
+    "type": "Core",
+    "majorMuscle": "Abs",
+    "minorMuscle": "Hip Flexors",
+    "setupNotes": ""
+  },
+  {
+    "id": "wrist_curls_dumbbell",
+    "name": "Wrist Curls, Dumbbell",
+    "type": "Pull",
+    "majorMuscle": "Forearms",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "wrist_curls_kettlebell",
+    "name": "Wrist Curls, Kettlebell",
+    "type": "Pull",
+    "majorMuscle": "Forearms",
+    "minorMuscle": "",
+    "setupNotes": ""
+  },
+  {
+    "id": "barbell_decline_bench_press",
+    "name": "Barbell Decline Bench Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Triceps",
+    "setupNotes": ""
+  },
+  {
+    "id": "dumbbell_decline_chest_press",
+    "name": "Dumbbell Decline Chest Press",
+    "type": "Push",
+    "majorMuscle": "Pecs",
+    "minorMuscle": "Front Delts",
+    "setupNotes": ""
+  }
+]
