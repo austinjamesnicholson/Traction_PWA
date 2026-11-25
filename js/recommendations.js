@@ -144,6 +144,7 @@ export function cachedRecommendation(sessionID, exerciseName) {
   return cache.get(sessionID + "|" + exerciseName);
 }
 export async function recommend(state, exercise, session, force = false) {
+  if (!config.aiEnabled) throw new Error("AI recommendations are disabled.");
   const key = session.sessionID + "|" + exercise.name;
   if (!force && cache.has(key)) return cache.get(key);
   if (!config.supabaseUrl || !config.supabasePublicKey)

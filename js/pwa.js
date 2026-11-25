@@ -35,7 +35,7 @@ export function setupPWA() {
   });
   const connected = () => {
     document.querySelector("#connection").textContent = navigator.onLine
-      ? "On-device journal"
+      ? "Ready to train"
       : "Offline · ready to train";
   };
   window.addEventListener("online", connected);

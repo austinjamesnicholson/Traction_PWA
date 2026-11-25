@@ -1,7 +1,6 @@
 import { heading, esc, date, time, empty, notify, modal } from "../ui.js";
 import { uid, now, sessionSets, previousSets, validSet } from "../model.js";
 import { charts } from "../charts.js";
-import { recommend, cachedRecommendation } from "../recommendations.js";
 let dirty = false;
 export const hasUnsavedChanges = () => dirty;
 export const clearDirty = () => {
@@ -49,7 +48,7 @@ export function hub(ctx, id, name) {
     (exercise.setupNotes
       ? `<p class="setup-note"><strong>Setup notes</strong> ${esc(exercise.setupNotes)}</p>`
       : "") +
-    `<div class="hub-top"><section class="card"><div class="section-head"><div><p class="eyebrow">YOUR LAST SESSION</p><h2>Previous sets</h2></div><span class="muted">${previous.length ? date(previous[0].timestamp) : ""}</span></div>${previous.length ? `<div class="table-scroll"><table><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>Notes</th></tr></thead><tbody>${previous.map((s, i) => `<tr><td>${i + 1}</td><td>${s.weight}</td><td>${s.reps}</td><td>${esc(s.notes) || "—"}</td></tr>`).join("")}</tbody></table></div><button class="quiet" id="copy-previous">Use previous sets as a starting point</button>` : empty("No previous sets", "Your next session will have something to build on.")}</section><section class="card ai-card"><p class="eyebrow">A LITTLE DIRECTION</p><h2>AI session guidance</h2><div id="ai-result"><p>Get suggested warm-up and working sets based on your saved history and this workout.</p></div><button class="secondary" id="recommend">Get recommendation</button><p class="fine-print">Optional. Workout history and notes are sent to the configured AI service when you request guidance. Suggestions are advisory.</p></section></div>
+    `<div class="hub-top"><section class="card"><div class="section-head"><div><p class="eyebrow">YOUR LAST SESSION</p><h2>Previous sets</h2></div><span class="muted">${previous.length ? date(previous[0].timestamp) : ""}</span></div>${previous.length ? `<div class="table-scroll"><table><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>Notes</th></tr></thead><tbody>${previous.map((s, i) => `<tr><td>${i + 1}</td><td>${s.weight}</td><td>${s.reps}</td><td>${esc(s.notes) || "—"}</td></tr>`).join("")}</tbody></table></div><button class="quiet" id="copy-previous">Use previous sets as a starting point</button>` : empty("No previous sets", "Your next session will have something to build on.")}</section></div>
     <section class="card logging-card"><div class="section-head"><div><p class="eyebrow">THE WORK HAPPENS HERE</p><h2>Current session</h2></div><span class="badge" id="draft-status">${dirty ? "Draft restored" : "Ready to log"}</span></div><form id="sets-form"><div id="set-rows"></div><p class="form-error" id="set-error" role="alert"></p><div class="actions"><button type="button" id="add-set" class="secondary">＋ Add set</button><button type="button" id="discard" class="quiet">Discard changes</button><button type="submit" class="primary">Save sets</button></div></form><p class="fine-print">Drafts stay on this device until you save or discard them. Use 0 lb for bodyweight sets.</p></section>${charts(ctx.store.state.sets.filter((s) => s.exerciseName === name))}`
   );
 }
@@ -191,29 +190,4 @@ export function bindHub(ctx, id, name) {
         },
         "Use previous sets",
       );
-  function showAI(entry) {
-    const r = entry.result,
-      currentCount = sessionSets(ctx.store.state, id, name).length;
-    document.querySelector("#ai-result").innerHTML =
-      `<h3>${esc(r.headline)}</h3><p>${esc(r.summary)}</p><ul class="recommendation-sets">${r.sets.map((s) => `<li><span>${s.setType === "warmUp" ? "Warm-up" : "Working"}</span><strong>${s.weight} ${s.unit} × ${s.repsMin === s.repsMax ? s.repsMin : s.repsMin + "–" + s.repsMax}</strong></li>`).join("")}</ul><p>${esc(r.sessionSuggestion)}</p>${entry.setCount !== currentCount ? '<p class="warning">Your saved set count has changed. Refresh for updated guidance.</p>' : ""}`;
-    document.querySelector("#recommend").textContent = "Refresh recommendation";
-  }
-  const cached = cachedRecommendation(id, name);
-  if (cached) showAI(cached);
-  document.querySelector("#recommend").onclick = async (event) => {
-    const button = event.currentTarget;
-    button.disabled = true;
-    button.textContent = "Getting guidance…";
-    try {
-      const entry = await recommend(ctx.store.state, exercise, session, true);
-      if (ctx.routeKey === `hub/${id}/${name}`) showAI(entry);
-    } catch (error) {
-      if (ctx.routeKey === `hub/${id}/${name}`)
-        document.querySelector("#ai-result").innerHTML =
-          `<p class="warning">${esc(error.message)}</p>`;
-    } finally {
-      button.disabled = false;
-      button.textContent = "Refresh recommendation";
-    }
-  };
 }

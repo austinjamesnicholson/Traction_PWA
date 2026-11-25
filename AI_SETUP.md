@@ -1,5 +1,7 @@
 # Optional AI recommendations
 
+**Disabled in the current site.** The Traction_PWA project is used for accounts and workout storage only. These notes are archived reference for future AI work; no AI server has been deployed to the new project.
+
 Workout logging, history, charts, installation, and offline use work without a backend.
 
 The client is compatible with the original Traction `workout-recommendation` Supabase Edge Function. Use your **Traction project**, not the Waypoint project. No hosted project was modified during this rebuild.

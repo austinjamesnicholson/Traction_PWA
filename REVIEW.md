@@ -1,5 +1,7 @@
 # Review of the original Traction
 
+This describes parity at the initial rebuild. The current PWA now adds Supabase accounts and workout cloud storage, with AI disabled. See CLOUD_SETUP.md for the current connection.
+
 Reviewed on November 25, 2026. Original GitHub HEAD verified with `git ls-remote`: `12ac2dcadcb653182f857d5f8d7fa240a510e3a4` (PLIST CORRECTION). This matches the local checkout used for the code review. No original files or Git settings were changed.
 
 The original is a native SwiftUI/SwiftData iOS prototype, not a website. `Traction__0_1_App.swift` opens `MainMenuView`; the Xcode-generated `ContentView` and `Item` are not the actual workout workflow. `CardioExercisie.swift` has no implemented model. The roadmap describes proposed features beyond the implemented screens.

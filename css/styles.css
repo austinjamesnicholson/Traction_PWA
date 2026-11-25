@@ -1503,3 +1503,49 @@ dialog .actions {
     animation: none !important;
   }
 }
+
+.account-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin: 20px 48px 0;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  font-size: 0.875rem;
+  color: var(--muted);
+}
+.account-bar a {
+  white-space: nowrap;
+  padding: 7px 0;
+}
+.account-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.conflict-panel {
+  padding: 18px;
+  margin: 20px 0;
+  border: 1px solid #9c704e;
+  border-radius: 10px;
+  background: #392c25;
+}
+#auth-message {
+  margin-top: 18px;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .account-bar {
+    margin: 12px 20px 0;
+    font-size: 0.8rem;
+  }
+  .account-tabs button {
+    flex: 1;
+  }
+  .hub-top {
+    grid-template-columns: 1fr;
+  }
+}

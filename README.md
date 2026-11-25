@@ -1,81 +1,78 @@
-# Traction PWA
+﻿# Traction PWA
 
-A new browser implementation of the Traction iPhone workout journal. Install it on your home screen, log workouts offline, and keep your training history on your device.
+A workout journal you can install on your phone or computer. Log workouts offline and sign in to keep saved training history in your private Supabase account.
 
-The original [Traction repository](https://github.com/austinjamesnicholson/Traction) is unchanged. This is a separate implementation for [Traction_PWA](https://github.com/austinjamesnicholson/Traction_PWA).
+**App:** https://austinjamesnicholson.github.io/Traction_PWA/
 
-## Open the app
+This is a separate implementation of the original Traction iPhone app. The original repository is unchanged.
 
-Once GitHub Pages is enabled and its deployment succeeds, the app will be at:
+## Accounts and cloud storage
 
-**https://austinjamesnicholson.github.io/Traction_PWA/**
+Open **Account & sync** in the navigation or **Sign in** at the top of the page.
 
-In the repository, open **Settings → Pages → Build and deployment → Source → GitHub Actions**. The included workflow checks the code and deploys the public app files when `main` changes. If needed, run **Actions → Check and deploy Traction PWA → Run workflow** after enabling Pages.
+1. Choose **Create account** and enter your email and a password of at least eight characters.
+2. Confirm your email, then sign in.
+3. Use the same account on your other devices.
 
-On iPhone, open the published app in **Safari → Share → Add to Home Screen**. On desktop or Android, use the browser’s **Install app** option. Open online once so the offline files can be saved.
+Saved workout sessions, set entries, skip notes, alternate exercises, profile metrics, and routine selection sync automatically. Changes save locally first and upload when connected. **Sync now** checks immediately. The account bar reports pending changes, offline use, errors, and successful cloud saves.
 
-## What it does
+Different records changed on different devices combine automatically. If both devices change the same record, **Account & sync** asks which conflicting edits to keep. Export a backup before resolving a conflict for an extra copy.
 
-- Dashboard with a rolling seven-day calendar, completed-workout count, saved-set count, recent sessions, and muscle volume.
-- Austin’s and Lizzie’s routines and all ten original workout templates, using all 66 original exercises.
-- Start, resume, and finish a workout. Choose exercise variations, substitute matching exercises, and skip blocks with notes.
-- Log weight in pounds, reps, and notes; add or remove rows; edit saved sets; see saved/modified/unsaved row states.
-- Recover draft rows after leaving the page or reopening the app. Drafts do not count as completed sets.
-- See the previous exercise session and copy its sets into a draft.
-- Weight-versus-reps and fatigue (weight × reps by set number) charts with consistent session colors.
-- Searchable workout history, an exercise library with filters, and an editable database grouped by exercise and workout.
-- Profile fields for height, body weight, and age.
-- JSON backup/restore and import of the original `setEntryLibrary.json`, with duplicate detection.
-- Optional AI recommendations through the existing Supabase function, with anonymous authentication, token refresh, per-session caching, errors, and explicit refresh.
+**Exercise drafts stay on the device where you type them.** Press **Save sets** to include them in your saved workout and cloud sync.
 
-The original circuit blocks are previews; the PWA additionally lets you log their individual exercises. Automatic circuit rotation, cardio distance/duration entry, GPS, watch integration, custom routine building, and health integrations were roadmap items, not working features in the reviewed app. They are not implemented here.
+Existing device-only workouts stay separate when signing in. To copy them into an account, export a backup while signed out, sign in, then import it in Settings. Nothing is uploaded from another app or old iPhone automatically.
 
-## Your data
+Signing out opens your separate device-only journal. Account caches, including pending changes, stay in this browser for the next sign-in. Use your own device. Clearing browser storage can remove unsynced changes and drafts.
 
-Workout records, draft rows, routine choice, and profile metrics are saved in this browser’s local storage. **They do not automatically sync between devices.** Export backups in Settings. Clearing site data, uninstalling some browsers, or using private browsing can remove local records.
+**AI is disabled.** The site does not show AI controls or call an AI service.
 
-The original app’s historical workout records are **not published in this public repository**. To bring them into the PWA, choose **Settings → Import JSON** and select the original `setEntryLibrary.json`. The importer preserves set/session IDs, reconstructs session start/end times, and skips already-imported sets. Nothing is imported automatically from Waypoint, SwiftData, or another browser.
+## Workout features
 
-If two tabs edit the same journal, the older tab will refuse to overwrite newer data and ask you to reload. If storage is full or damaged, errors are shown rather than claiming a save succeeded. An unreadable saved journal is not automatically erased; the recovery screen can export the original stored contents.
+- Dashboard with a rolling seven-day calendar, completed workouts, saved sets, recent sessions, and weighted primary/secondary muscle volume.
+- Austin's and Lizzie's routines, all ten original templates, and all 66 exercise definitions.
+- Start/resume/finish workouts, select variations, choose alternates, and skip blocks with notes.
+- Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states.
+- Previous-session sets and optional copying into the current draft.
+- Weight-versus-reps and fatigue charts with consistent session colors.
+- Searchable history, filtered library, editable saved records, and profile metrics.
+- JSON backup/restore and duplicate-safe import of the original setEntryLibrary.json.
 
-AI sends the selected exercise’s saved history, notes, and this session’s skip/substitution context only when you press the recommendation button. Profile metrics are not included. AI responses and authentication requests are not cached by the service worker. See [AI_SETUP.md](AI_SETUP.md).
+The original circuit and cardio features were placeholders. Individual exercise logging inside circuit blocks is available, but not automatic circuit rotation, GPS, watch/HealthKit integration, or cardio distance entry. See [REVIEW.md](REVIEW.md).
+
+## Install
+
+On iPhone, open in **Safari > Share > Add to Home Screen**. In Chrome or Edge, use **Install app**. Open online once to cache the app. Sign in online before using your account offline.
 
 ## Run locally
 
-Install Node.js 22 or newer, then from this folder:
+With Node.js 22 or newer:
 
 ```sh
 npm start
 ```
 
-Open **http://localhost:4173**. There is no build step and no package installation is needed.
+Open **http://localhost:4173**. No build or package installation is needed; the pinned Supabase browser library is included locally with its license.
 
 ```sh
 npm test
 npm run check
 ```
 
-The source uses native JavaScript modules and hash navigation, so it also works under the `/Traction_PWA/` GitHub Pages subdirectory.
+The GitHub Actions workflow tests and deploys the public files when main changes. GitHub Pages must use **GitHub Actions** as its source.
 
 ## Code layout
 
-```text
-index.html               App shell and navigation
-css/styles.css           Responsive styling
-js/app.js                Screen routing and startup
-js/model.js              Workout rules and legacy import
-js/store.js              Validated local storage and backup checks
-js/views/                Dashboard, workouts, logging, history, library, settings
-js/charts.js             SVG progress charts
-js/recommendations.js    Optional Supabase AI client
-js/config.js             Public AI connection settings
-js/pwa.js                Installation and update prompts
-data/                    Exercise library and templates
-sw.js                    Explicit offline app shell
-supabase/                Existing AI server function and quota SQL
-tests/                   Data and offline behavior checks
-```
+- index.html and css/styles.css: navigation, app shell, responsive styling.
+- js/app.js and js/views/: routing and individual screens, including accounts.
+- js/cloud.js: authentication and network adapter.
+- js/sync.js: account caches, offline queue, three-way merging.
+- js/store.js: journal validation and device-only storage.
+- js/model.js and js/charts.js: workout calculations and charts.
+- js/config.js: public project settings; AI disabled.
+- js/vendor/: pinned Supabase SDK and MIT license.
+- data/: 66 exercises and ten templates.
+- sw.js and js/pwa.js: offline installation and updates.
+- supabase/schema.sql: cloud schema and account access rules.
+- tests/: workout, account, sync, and offline checks.
 
-When changing cached app files, update the cache version in `sw.js` and add new app files to its asset list. The app offers an update prompt; saved records stay on the device.
-
-See [REVIEW.md](REVIEW.md) for source parity and [VALIDATION.md](VALIDATION.md) for checks and verification limits.
+After changing app files, increment the cache version in sw.js and include new runtime files in its asset list. See [CLOUD_SETUP.md](CLOUD_SETUP.md) and [VALIDATION.md](VALIDATION.md).

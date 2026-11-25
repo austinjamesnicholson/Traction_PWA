@@ -1,4 +1,6 @@
-import { createStore, STORAGE_KEY } from "./store.js";
+import { STORAGE_KEY } from "./store.js";
+import { createCloud } from "./cloud.js";
+import { account, bindAccount } from "./views/account.js";
 import { empty, notify, download } from "./ui.js";
 import { setupPWA, activateUpdate } from "./pwa.js";
 import { dashboard } from "./views/dashboard.js";
@@ -49,9 +51,9 @@ try {
     }),
   );
   exercises.sort((a, b) => a.name.localeCompare(b.name));
-  const store = createStore(localStorage, exercises, templates);
   const ctx = {
-    store,
+    store: null,
+    cloud: null,
     exercises,
     templates,
     routines,
@@ -69,10 +71,57 @@ try {
     library: [library, bindLibrary],
     profile: [profile, bindProfile],
     settings: [settings, bindSettings],
+    account: [account, bindAccount],
   };
+  let started = false,
+    owner = null,
+    lastConflict = false;
+  const cloud = createCloud({
+    storage: localStorage,
+    exercises,
+    templates,
+    onData() {
+      if (!started) return;
+      const next = cloud.account?.id || null;
+      if (owner !== next) {
+        owner = next;
+        clearDirty();
+        location.hash = "#account";
+      }
+      render();
+    },
+    onStatus(status) {
+      document.querySelector("#cloud-status").textContent = status.message;
+      document.querySelector("#account-link").textContent = ctx.cloud?.account
+        ? "Account & sync"
+        : "Sign in";
+      const node = document.querySelector("#account-status");
+      if (node) node.textContent = status.message;
+      const conflict = status.state === "conflict";
+      if (
+        started &&
+        ctx.routeKey === "account" &&
+        cloud.account &&
+        conflict !== lastConflict
+      )
+        render();
+      lastConflict = conflict;
+    },
+  });
+  ctx.cloud = cloud;
+  ctx.store = cloud.store;
   function render() {
     try {
-      const [page, ...args] = (location.hash.slice(1) || "dashboard")
+      let rawRoute = location.hash.slice(1);
+      if (/^(access_token|error|refresh_token|type)=/.test(rawRoute)) {
+        globalThis.history.replaceState(
+          null,
+          "",
+          location.pathname + location.search + "#account",
+        );
+        rawRoute = "account";
+      }
+      const [page, ...args] = (rawRoute || "dashboard")
         .split("/")
         .map(decodeURIComponent);
       ctx.routeKey = [page, ...args].join("/");
@@ -103,6 +152,7 @@ try {
           profile: "Profile",
           settings: "Settings",
           database: "Database",
+          account: "Account & sync",
         }[page] || "Page");
       document.title =
         (page === "dashboard"
@@ -137,6 +187,14 @@ try {
     event.preventDefault();
     notify(event.reason?.message || "This action could not be completed.");
   });
+  window.addEventListener("traction-account-change", () => {
+    clearDirty();
+    location.hash = "#account";
+    render();
+  });
+  await cloud.start();
+  owner = cloud.account?.id || null;
+  started = true;
   render();
   setupPWA();
 } catch (error) {

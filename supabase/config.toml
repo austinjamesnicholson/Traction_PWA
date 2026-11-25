@@ -2,8 +2,9 @@
 
 [auth]
 enabled = true
-site_url = "http://localhost:4173"
-enable_anonymous_sign_ins = true
+site_url = "https://austinjamesnicholson.github.io/Traction_PWA/"
+additional_redirect_urls = ["https://austinjamesnicholson.github.io/Traction_PWA/", "http://localhost:4173/"]
+enable_anonymous_sign_ins = false
 
 [functions.workout-recommendation]
 verify_jwt = true
