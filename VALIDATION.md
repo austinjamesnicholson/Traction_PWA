@@ -8,6 +8,7 @@
 - `npm run check`: JavaScript syntax, relative module imports, complete 25-entry offline asset list, PNG icon dimensions, 66 exercises, and all 10 templates with valid exercise references.
 - Local static server returned HTTP 200 for the app entry point.
 - Source formatted with Prettier. No runtime libraries, build step, CDN scripts, or npm installation are required.
+- GitHub Actions also passed all 19 tests and the file checks on Ubuntu/Node 24. The first deployment run stopped at `actions/configure-pages` because GitHub Pages is not enabled for this repository. Enable Pages with GitHub Actions as its source, then rerun the workflow. The app is uploaded to the repository but is not yet published as a live website.
 
 ## Verification limits
 
