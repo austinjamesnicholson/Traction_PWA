@@ -144,7 +144,7 @@
 }
 .routine-setup {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 24px;
   align-items: start;
 }
@@ -211,6 +211,9 @@
   width: 20px;
   height: 20px;
 }
+.setup-build {
+  margin-top: 24px;
+}
 .setup-details > .primary {
   width: 100%;
 }
@@ -265,13 +268,10 @@
   min-width: 0;
 }
 .workout-tabs {
-  display: flex;
-  align-items: stretch;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 135px), 1fr));
   gap: 10px;
   margin-bottom: 18px;
-  overflow-x: auto;
-  padding: 0 0 6px;
-  scrollbar-width: thin;
 }
 .workout-tab {
   display: flex;
@@ -283,10 +283,10 @@
   border-radius: 10px;
   background: #152439;
   color: #b4c3db;
-  min-width: 132px;
+  min-width: 0;
   padding: 14px 18px;
   flex: 0 0 auto;
-  max-width: 260px;
+  max-width: none;
 }
 .workout-tab span {
   font-weight: 600;
@@ -334,73 +334,79 @@
 .routine-exercise-block {
   display: flex;
   align-items: stretch;
-  gap: 12px;
+  gap: 8px;
   background: #213043;
   border: 1px solid #34465c;
   border-radius: 16px;
-  padding: 14px;
+  padding: 10px;
   min-width: 0;
 }
 .block-choices {
-  display: flex;
-  gap: 12px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(72px, 0.35fr);
+  gap: 8px;
   flex: 1;
   min-width: 0;
-  overflow-x: auto;
-  padding-bottom: 3px;
-  scroll-snap-type: x proximity;
+}
+.exercise-selections {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+  gap: 8px;
+  min-width: 0;
 }
 .exercise-choice {
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  flex: 1 0 205px;
-  max-width: 340px;
-  min-height: 154px;
-  padding: 46px 18px 20px;
+  min-width: 0;
+  min-height: 112px;
+  padding: 8px 12px 12px;
   background: #132135;
   border: 1px solid #2b3c54;
-  border-radius: 12px;
-  scroll-snap-align: start;
+  border-radius: 10px;
 }
 .exercise-choice strong {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  line-height: 1.55;
+  line-height: 1.4;
   overflow-wrap: anywhere;
 }
 .exercise-choice small {
-  margin-top: 8px;
-  font-size: 0.8rem;
+  margin-top: 6px;
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
 }
 .choice-tools {
-  position: absolute;
-  right: 7px;
-  top: 5px;
   display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
 }
 .choice-tools .quiet {
   color: #a3b7d0;
+  width: 34px;
+  min-height: 40px;
+  padding: 7px;
 }
 .choice-tools .delete-choice:hover {
   color: #ffb5b5;
 }
 .add-choice {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  flex: 0 0 190px;
-  min-height: 154px;
-  padding: 24px;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 10px 8px;
   border: 1px dashed #49637e;
-  border-radius: 12px;
+  border-radius: 10px;
   background: #17283c;
   color: #bbcfeb;
-  font-size: 0.95rem;
-  text-align: left;
-  scroll-snap-align: start;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 .add-choice:hover,
 .add-exercise:hover {
@@ -620,8 +626,7 @@ dialog.exercise-picker {
     grid-template-columns: 1fr;
   }
   .routine-week {
-    grid-template-columns: repeat(7, minmax(110px, 1fr));
-    overflow-x: auto;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 110px), 1fr));
     padding-bottom: 10px;
   }
   .workout-fields {
@@ -721,19 +726,15 @@ dialog.exercise-picker {
     border-radius: 12px;
   }
   .exercise-choice {
-    flex: none;
-    max-width: none;
-    min-height: 130px;
-    padding-left: 14px;
-    padding-right: 14px;
+    min-height: 100px;
+    padding: 5px 8px 10px;
   }
   .add-choice {
-    flex: none;
-    min-height: 70px;
-    padding: 18px;
+    padding: 8px 5px;
+    font-size: 0.78rem;
   }
   .block-order-controls {
-    flex-basis: 42px;
+    flex-basis: 32px;
   }
   .reorder-shortcuts .quiet {
     min-height: 37px;
@@ -761,8 +762,7 @@ dialog.exercise-picker {
     overflow-x: visible;
   }
   .block-choices {
-    flex-direction: column;
-    overflow-x: visible;
+    grid-template-columns: minmax(0, 1fr) minmax(64px, 0.35fr);
   }
   .picker-filters {
     gap: 10px;
@@ -777,5 +777,32 @@ dialog.exercise-picker {
   }
   .picker-exercise > .row > .badge {
     display: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .routine-exercise-block .grip {
+    width: 32px;
+    padding: 5px;
+  }
+  .routine-exercise-block .exercise-choice strong {
+    font-size: 0.85rem;
+  }
+  .workout-builder > .section-head {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .workout-builder > .section-head > div {
+    min-width: 0;
+  }
+  .workout-builder .eyebrow {
+    overflow-wrap: anywhere;
+  }
+  .add-exercise-row {
+    padding: 9px;
+  }
+  .add-exercise {
+    min-height: 65px;
+    padding: 12px;
   }
 }

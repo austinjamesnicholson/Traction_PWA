@@ -18,14 +18,17 @@ export const BUILTIN_ROUTINES = [
     ],
   },
 ];
+// Retained for a future optional scheduling UI. Existing day data is preserved.
+export const SHOW_ROUTINE_SCHEDULE = false;
+export const MAX_WORKOUTS = 50;
 export const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 export const FORMATS = [
   {
     id: "fullbody",
     name: "Full body",
     detail: "Train a little of everything each session.",
-    count: 3,
-    names: ["Full Body A", "Full Body B", "Full Body C"],
+    count: 1,
+    names: ["Full Body"],
     focus: ["Full Body"],
   },
   {
@@ -40,8 +43,8 @@ export const FORMATS = [
     id: "upperlower",
     name: "Upper / Lower",
     detail: "Alternate upper- and lower-body sessions.",
-    count: 4,
-    names: ["Upper A", "Lower A", "Upper B", "Lower B"],
+    count: 2,
+    names: ["Upper", "Lower"],
     focus: ["Full Body", "Legs"],
   },
   {
@@ -56,7 +59,7 @@ export const FORMATS = [
     id: "custom",
     name: "Custom format",
     detail: "Start with a blank week and make it yours.",
-    count: 3,
+    count: 1,
     names: [],
     focus: ["Full Body"],
   },
@@ -89,8 +92,8 @@ export function createRoutine(
   name = "My routine",
 ) {
   const spec = FORMATS.find((f) => f.id === format);
-  if (!spec || !Number.isInteger(count) || count < 1 || count > 7)
-    throw new Error("Choose one to seven workouts per week.");
+  if (!spec || !Number.isInteger(count) || count < 1 || count > MAX_WORKOUTS)
+    throw new Error("Choose between one and 50 workout variations.");
   const workouts = Array.from({ length: count }, (_, i) =>
     newWorkout(
       i,
@@ -104,7 +107,7 @@ export function createRoutine(
     ),
   );
   const days = Array(7).fill(null);
-  defaultDays[count].forEach((day, i) => {
+  (defaultDays[count] || defaultDays[7]).forEach((day, i) => {
     days[day] = workouts[i].id;
   });
   return {
@@ -113,6 +116,7 @@ export function createRoutine(
     format,
     workouts,
     days,
+    ...(count > 7 ? { scheduleEnabled: false } : {}),
     createdAt: now(),
     updatedAt: now(),
   };
@@ -216,14 +220,14 @@ export function validateRoutines(
       !FORMATS.some((f) => f.id === r.format) ||
       !Array.isArray(r.workouts) ||
       r.workouts.length < 1 ||
-      r.workouts.length > 7 ||
+      r.workouts.length > MAX_WORKOUTS ||
       !Array.isArray(r.days) ||
       r.days.length !== 7 ||
       !Number.isFinite(Date.parse(r.createdAt)) ||
       !Number.isFinite(Date.parse(r.updatedAt))
     )
       throw new Error(
-        "A routine needs a name and one to seven workouts in a seven-day week.",
+        "A routine needs a name and one to 50 workout variations.",
       );
     for (const w of r.workouts) {
       if (
@@ -240,7 +244,9 @@ export function validateRoutines(
     }
     const scheduled = r.days.filter(Boolean);
     if (
-      (!allowEmpty && scheduled.length !== r.workouts.length) ||
+      (!allowEmpty &&
+        r.scheduleEnabled !== false &&
+        scheduled.length !== r.workouts.length) ||
       new Set(scheduled).size !== scheduled.length ||
       scheduled.some((id) => !r.workouts.some((w) => w.id === id)) ||
       r.days.some((id) => id !== null && typeof id !== "string")
@@ -262,11 +268,13 @@ export function assignDay(routine, index, id) {
   routine.days[index] = id;
 }
 export function addWorkout(routine) {
-  if (routine.workouts.length >= 7)
-    throw new Error("A weekly routine supports up to seven workouts.");
+  if (routine.workouts.length >= MAX_WORKOUTS)
+    throw new Error("A routine supports up to 50 workout variations.");
   const w = newWorkout(routine.workouts.length);
   routine.workouts.push(w);
-  routine.days[routine.days.indexOf(null)] = w.id;
+  const day = routine.days.indexOf(null);
+  if (day !== -1) routine.days[day] = w.id;
+  if (routine.workouts.length > 7) routine.scheduleEnabled = false;
   return w;
 }
 export function removeWorkout(routine, id) {
@@ -402,14 +410,17 @@ export function copyRoutine(source, templates) {
     }));
     return w;
   });
+  if (source.scheduleEnabled === false) result.scheduleEnabled = false;
   result.days = source.days
     ? source.days.map((id) =>
         id ? result.workouts[source.templateIDs.indexOf(id)]?.id || null : null,
       )
     : Array(7).fill(null);
   if (!source.days)
-    defaultDays[result.workouts.length].forEach((day, i) => {
-      result.days[day] = result.workouts[i].id;
-    });
+    (defaultDays[result.workouts.length] || defaultDays[7]).forEach(
+      (day, i) => {
+        result.days[day] = result.workouts[i].id;
+      },
+    );
   return result;
 }

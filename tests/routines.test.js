@@ -26,7 +26,7 @@ import {
 } from "../js/sync.js";
 import { filterExercises, exerciseCategory } from "../js/exercise-catalog.js";
 import { openRoutineDraft } from "../js/routine-draft.js";
-import { routinePage } from "../js/views/routine-builder.js";
+import { routinePage, bindRoutinePage } from "../js/views/routine-builder.js";
 import { workouts, session } from "../js/views/workouts.js";
 const exercises = JSON.parse(
   readFileSync(new URL("../data/exercises.json", import.meta.url)),
@@ -303,7 +303,7 @@ test("routine pages render every phase and workouts use the saved snapshot after
   assert.match(routinePage(ctx, "new"), /Add option/);
   ctx.routineEditor.value.phase = 3;
   assert.match(routinePage(ctx, "new"), /Save routine/);
-  assert.match(workouts(ctx), /Your weekly plan/);
+  assert.doesNotMatch(workouts(ctx), /Your weekly plan/);
   const template = ctx.templates.find((t) => t.id === r.workouts[0].id);
   state.sessions.push({
     sessionID: "s",
@@ -317,4 +317,82 @@ test("routine pages render every phase and workouts use the saved snapshot after
     new RegExp(names[0].replace(/[.*+?^${}()|[\]\\]/g, "\\$&")),
   );
   delete globalThis.localStorage;
+});
+
+test("name-first setup needs no count field and preserves added variations when returning from later steps", () => {
+  globalThis.localStorage = disk();
+  globalThis.window = { scrollTo() {} };
+  const state = freshState();
+  const ctx = { store: { state }, exercises, render() {}, cloud: null };
+  const markup = routinePage(ctx, "new");
+  assert.ok(markup.indexOf('name="name"') < markup.indexOf("data-format="));
+  assert.doesNotMatch(markup, /Workouts per week|name="count"/);
+  const form = { elements: { name: { value: "My variations" } } };
+  const custom = { dataset: { format: "custom" } };
+  const nodes = {
+    "#routine-setup": form,
+    "#routine-draft-status": {},
+    "#builder-notice": {},
+    "#discard-routine": {},
+  };
+  globalThis.document = {
+    querySelector: (s) => nodes[s],
+    querySelectorAll: (s) => (s === "[data-format]" ? [custom] : []),
+  };
+  try {
+    bindRoutinePage(ctx, "new");
+    custom.onclick();
+    form.elements.name.oninput();
+    form.onsubmit({ preventDefault() {} });
+    const draft = ctx.routineEditor.value;
+    assert.equal(draft.routine.workouts.length, 1);
+    assert.equal(draft.routine.name, "My variations");
+    assert.equal(draft.routine.scheduleEnabled, false);
+    const editor = routinePage(ctx, "new");
+    assert.doesNotMatch(editor, /id="builder-name"|data-day=/);
+    assert.match(editor, /Add workout/);
+    const added = addWorkout(draft.routine);
+    draft.phase = 1;
+    bindRoutinePage(ctx, "new");
+    form.onsubmit({ preventDefault() {} });
+    assert.equal(draft.routine.workouts.length, 2);
+    assert.equal(draft.routine.workouts[1].id, added.id);
+  } finally {
+    delete globalThis.document;
+    delete globalThis.window;
+    delete globalThis.localStorage;
+  }
+});
+
+test("unscheduled variations can exceed seven, round-trip drafts, save and copy without losing legacy day assignments", () => {
+  const r = complete("custom", 1);
+  r.scheduleEnabled = false;
+  const days = structuredClone(r.days);
+  while (r.workouts.length < 10) addExercise(addWorkout(r), names[0]);
+  assert.equal(r.days[0], days[0]);
+  assert.equal(r.days.length, 7);
+  validateRoutines([r], exercises);
+  const state = freshState();
+  saveRoutine(state, r, exercises);
+  validateState(state, exercises, templates);
+  const storage = disk();
+  const initial = {
+    phase: 2,
+    name: r.name,
+    format: r.format,
+    count: 10,
+    routine: r,
+  };
+  openRoutineDraft(storage, "mock", "new", exercises, initial).save();
+  assert.equal(
+    openRoutineDraft(storage, "mock", "new", exercises, initial).value.routine
+      .workouts.length,
+    10,
+  );
+  const copied = copyRoutine(
+    listRoutines(state).find((x) => x.id === r.id),
+    listTemplates(state, templates),
+  );
+  assert.equal(copied.workouts.length, 10);
+  validateRoutines([copied], exercises);
 });

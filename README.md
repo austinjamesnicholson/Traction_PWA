@@ -43,12 +43,12 @@ The original circuit and cardio features were placeholders. Individual exercise 
 
 Open **Routines > New routine**.
 
-1. Choose Full Body, Push/Pull/Legs, Upper/Lower, Body-part Split, or Custom. Name the routine and choose one to seven workouts.
-2. Arrange the seven-day week, leaving rest days where you want them. Rename workouts or mark them as weightlifting, cardio, or other.
-3. Tap **Add exercise** and search or filter by body part, region, and movement. **Add option** adds an alternative in the same block; choose one when training. The pencil changes a selection and the trash icon removes it.
+1. Name the routine, then choose Full Body, Push/Pull/Legs, Upper/Lower, Body-part Split, or Custom. The routine name is edited only on this first step.
+2. Use **Add workout** to create additional variations (up to 50). Rename individual workouts or mark them as weightlifting, cardio, or other.
+3. Tap **Add exercise** and search or filter by body part, region, and movement. **Add option** stays beside the selected exercises and adds an alternative in the same block; choose one when training. The pencil changes a selection and the trash icon removes it.
 4. Drag a block's grip to reorder it, or use its Up/Down buttons. Review and save, optionally making it active.
 
-Custom routine cards support edit, copy, activate, and delete. Original routines can be copied into an editable plan. Started workouts retain their original exercise plan even if you edit or delete the routine. Unfinished builder drafts restore on the same device and remain separate for each account; only saved routines sync. Each workout is scheduled once per week in this first version.
+Custom routine cards support edit, copy, activate, and delete. Original routines can be copied into an editable plan. Started workouts retain their original exercise plan even if you edit or delete the routine. Unfinished builder drafts restore on the same device and remain separate for each account; only saved routines sync. Day scheduling is hidden for now; its code and previously saved assignments are retained for future use.
 
 For an existing Supabase installation, apply [supabase/routine-schema.sql](supabase/routine-schema.sql) once; new installations use the updated schema.sql. The hosted Traction_PWA project already has this change.
 

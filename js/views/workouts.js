@@ -8,7 +8,7 @@ import {
   skipBlock,
   sessionSets,
 } from "../model.js";
-import { sessionTemplate, DAYS } from "../routines.js";
+import { sessionTemplate, DAYS, SHOW_ROUTINE_SCHEDULE } from "../routines.js";
 export function workouts(ctx) {
   const { store, templates, routines } = ctx;
   const routine = routines.find((r) => r.id === store.state.routine);
@@ -26,7 +26,7 @@ export function workouts(ctx) {
           `<a class="resume-banner" href="#session/${encodeURIComponent(s.sessionID)}"><span>◷ <strong>${esc(s.templateName)}</strong> is in progress</span><span>Resume workout</span></a>`,
       )
       .join("") +
-    (routine.custom
+    (routine.custom && SHOW_ROUTINE_SCHEDULE
       ? `<section class="card"><div class="section-head"><h2>Your weekly plan</h2><a href="#routines/edit/${encodeURIComponent(routine.id)}">Edit routine</a></div><div class="routine-week">${routine.days.map((id, i) => `<div class="plan-day ${i === (new Date().getDay() + 6) % 7 ? "today" : ""}"><span>${DAYS[i]}</span><strong>${esc(routine.workouts.find((w) => w.id === id)?.name || "Rest")}</strong></div>`).join("")}</div></section>`
       : "") +
     `<div class="template-grid">${templates

@@ -1,3 +1,11 @@
+# Routine builder refinements
+
+- Routine naming appears above format selection and is editable only in the first step. No workouts-per-week input is needed. Formats supply their distinct starting workouts; Add workout creates more variations, up to 50 rather than a seven-day limit.
+- Day scheduling is hidden across builder, review, routine cards, and workout selection. SHOW_ROUTINE_SCHEDULE keeps the implementation available for future use. Existing day assignments remain stored; saving unscheduled variations does not require assigning days.
+- Exercise blocks use a shrinking grid: selected choices on the left, Add option always on the right. Alternatives wrap inside their block. Workout tabs and mobile navigation wrap instead of scrolling sideways.
+- npm test: 78 passing tests, including name-first setup without a count field, preserving variations when returning to setup, drafts/save/copy with more than seven variations, and existing scheduling helpers and data compatibility. npm run check verifies all 41 offline assets. Cache version v7.
+- Only isolated mock test data was used; no live account or journal changes were made. Browser preview access remains unavailable, so physical iPhone layout/dragging still requires device verification.
+
 # Profile and Overview simplification
 
 - Combined Profile and Account & sync, with metrics first and account controls beneath. Existing #account links redirect to Profile; sign-in, sign-out, recovery, sync status, and conflict resolution use the combined page.

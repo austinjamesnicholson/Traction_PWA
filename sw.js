@@ -1,5 +1,5 @@
 // Increment the version after changing app-shell files.
-const CACHE = "traction-shell-v6";
+const CACHE = "traction-shell-v7";
 const ASSETS = [
   "./",
   "./index.html",

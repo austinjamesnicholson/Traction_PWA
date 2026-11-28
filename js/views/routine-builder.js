@@ -2,6 +2,7 @@ import { heading, esc, empty, modal, notify } from "../ui.js";
 import {
   FORMATS,
   DAYS,
+  SHOW_ROUTINE_SCHEDULE,
   createRoutine,
   validateRoutines,
   saveRoutine,
@@ -28,7 +29,7 @@ function editorFor(ctx, action, id) {
     phase: existing ? 2 : 1,
     name: existing?.name || "My routine",
     format: existing?.format || "fullbody",
-    count: existing?.workouts.length || 3,
+    count: existing?.workouts.length || FORMATS[0].count,
     routine: existing ? structuredClone(existing) : null,
     original: existing ? structuredClone(existing) : null,
     selectedWorkout: existing?.workouts[0].id || null,
@@ -41,6 +42,8 @@ function editorFor(ctx, action, id) {
     ctx.exercises,
     initial,
   );
+  if (ctx.routineEditor.value.routine && !SHOW_ROUTINE_SCHEDULE)
+    ctx.routineEditor.value.routine.scheduleEnabled = false;
   return ctx.routineEditor;
 }
 function library(ctx) {
@@ -49,18 +52,19 @@ function library(ctx) {
     heading(
       "YOUR PLAN, YOUR PACE",
       "Routines",
-      "Build a week you look forward to showing up for.",
+      "Build workouts you look forward to showing up for.",
       `<a class="primary icon-label" href="#routines/new">${icon("plus")} ${localStorage.getItem(draftKey(scope(ctx))) ? "Continue new routine" : "New routine"}</a>`,
     ) +
-    `<div class="routine-library">${routines.map((r) => `<article class="card routine-card ${ctx.store.state.routine === r.id ? "active-routine" : ""}"><div class="section-head"><span class="routine-symbol">${icon("calendar")}</span><span class="badge ${ctx.store.state.routine === r.id ? "success" : ""}">${ctx.store.state.routine === r.id ? "Active routine" : r.custom ? "Your routine" : "Original routine"}</span></div><h2>${esc(r.name)}</h2><p>${esc(r.subtitle)}</p>${r.custom ? `<div class="routine-miniweek">${r.days.map((id, i) => `<span class="${id ? "training-day" : ""}" title="${DAYS[i]}: ${esc(r.workouts.find((w) => w.id === id)?.name || "Rest")}">${DAYS[i].slice(0, 1)}</span>`).join("")}</div>` : `<div class="routine-workout-names">${r.templateIDs.map((id) => `<span>${esc(ctx.templates.find((t) => t.id === id)?.name || id)}</span>`).join("")}</div>`}<div class="actions"><button class="${ctx.store.state.routine === r.id ? "secondary" : "primary"}" data-activate="${esc(r.id)}" ${ctx.store.state.routine === r.id ? "disabled" : ""}>${ctx.store.state.routine === r.id ? "Currently active" : "Use routine"}</button>${r.custom ? `<a class="secondary icon-label" href="#routines/edit/${encodeURIComponent(r.id)}">${icon("edit")} Edit</a>` : ""}<button class="quiet icon-button" data-copy-routine="${esc(r.id)}" aria-label="Make a copy of ${esc(r.name)}">${icon("copy")}</button>${r.custom ? `<button class="quiet icon-button delete-choice" data-delete-routine="${esc(r.id)}" aria-label="Delete ${esc(r.name)}">${icon("trash")}</button>` : ""}</div></article>`).join("")}</div><p class="fine-print">Saved routines sync with your signed-in account. Unfinished builder drafts stay on this device. Editing a routine never changes a workout you already started.</p>`
+    `<div class="routine-library">${routines.map((r) => `<article class="card routine-card ${ctx.store.state.routine === r.id ? "active-routine" : ""}"><div class="section-head"><span class="routine-symbol">${icon("calendar")}</span><span class="badge ${ctx.store.state.routine === r.id ? "success" : ""}">${ctx.store.state.routine === r.id ? "Active routine" : r.custom ? "Your routine" : "Original routine"}</span></div><h2>${esc(r.name)}</h2><p>${esc(r.subtitle)}</p>${r.custom && SHOW_ROUTINE_SCHEDULE ? `<div class="routine-miniweek">${r.days.map((id, i) => `<span class="${id ? "training-day" : ""}" title="${DAYS[i]}: ${esc(r.workouts.find((w) => w.id === id)?.name || "Rest")}">${DAYS[i].slice(0, 1)}</span>`).join("")}</div>` : `<div class="routine-workout-names">${r.templateIDs.map((id) => `<span>${esc(ctx.templates.find((t) => t.id === id)?.name || id)}</span>`).join("")}</div>`}<div class="actions"><button class="${ctx.store.state.routine === r.id ? "secondary" : "primary"}" data-activate="${esc(r.id)}" ${ctx.store.state.routine === r.id ? "disabled" : ""}>${ctx.store.state.routine === r.id ? "Currently active" : "Use routine"}</button>${r.custom ? `<a class="secondary icon-label" href="#routines/edit/${encodeURIComponent(r.id)}">${icon("edit")} Edit</a>` : ""}<button class="quiet icon-button" data-copy-routine="${esc(r.id)}" aria-label="Make a copy of ${esc(r.name)}">${icon("copy")}</button>${r.custom ? `<button class="quiet icon-button delete-choice" data-delete-routine="${esc(r.id)}" aria-label="Delete ${esc(r.name)}">${icon("trash")}</button>` : ""}</div></article>`).join("")}</div><p class="fine-print">Saved routines sync with your signed-in account. Unfinished builder drafts stay on this device. Editing a routine never changes a workout you already started.</p>`
   );
 }
 function setup(draft) {
-  return `<section class="routine-setup"><div class="card setup-intro"><p class="eyebrow">START WITH A LITTLE STRUCTURE</p><h2>How do you like to train?</h2><p>Choose a starting format. Every workout starts empty, ready for your exercises.</p><div class="routine-format-grid">${FORMATS.map((f) => `<button type="button" class="format-choice ${draft.format === f.id ? "selected" : ""}" data-format="${f.id}" aria-pressed="${draft.format === f.id}"><span class="format-symbol">${f.id === "custom" ? icon("plus") : icon("calendar")}</span><strong>${esc(f.name)}</strong><small>${esc(f.detail)}</small><span class="format-check">${draft.format === f.id ? icon("check") : ""}</span></button>`).join("")}</div></div><form id="routine-setup" class="card setup-details"><p class="eyebrow">A PLAN THAT FITS YOUR WEEK</p><h2>Make it yours</h2><label>Routine name<input name="name" value="${esc(draft.name)}" maxlength="80" required></label><label>Workouts per week<select name="count">${Array.from({ length: 7 }, (_, i) => `<option value="${i + 1}" ${draft.count === i + 1 ? "selected" : ""}>${i + 1} workout${i ? "s" : ""}</option>`).join("")}</select></label><p>We’ll make a seven-day schedule with rest days between sessions where possible. You can move days, rename workouts, or change their type next.</p><button class="primary" type="submit">Build workouts</button></form></section>`;
+  return `<form id="routine-setup" class="routine-setup"><section class="card setup-details"><p class="eyebrow">MAKE IT YOURS</p><h2>Name your routine</h2><label>Routine name<input name="name" value="${esc(draft.name)}" maxlength="80" required></label><p>Choose a starting format below. Add more variations with Add workout in the next step.</p></section><section class="card setup-intro"><p class="eyebrow">START WITH A LITTLE STRUCTURE</p><h2>How do you like to train?</h2><p>Choose a starting format. Every workout starts empty, ready for your exercises.</p><div class="routine-format-grid">${FORMATS.map((f) => `<button type="button" class="format-choice ${draft.format === f.id ? "selected" : ""}" data-format="${f.id}" aria-pressed="${draft.format === f.id}"><span class="format-symbol">${f.id === "custom" ? icon("plus") : icon("calendar")}</span><strong>${esc(f.name)}</strong><small>${esc(f.detail)}</small><span class="format-check">${draft.format === f.id ? icon("check") : ""}</span></button>`).join("")}</div><button class="primary setup-build" type="submit">Build workouts</button></section></form>`;
 }
+
 function review(ctx, draft) {
   const r = draft.routine;
-  return `<section class="card review-intro"><p class="eyebrow">YOUR WEEK, READY TO GO</p><h2>${esc(r.name)}</h2><div class="routine-week">${r.days.map((id, i) => `<div class="plan-day"><span>${DAYS[i]}</span><strong>${esc(r.workouts.find((w) => w.id === id)?.name || "Rest day")}</strong></div>`).join("")}</div><label class="check-label"><input type="checkbox" id="activate-routine" ${draft.activate ? "checked" : ""}><span>Make this my active routine</span></label></section><div class="routine-review-grid">${r.workouts.map((w) => `<section class="card"><div class="section-head"><div><span class="eyebrow">${esc(w.type)}</span><h2>${esc(w.name)}</h2></div><button class="quiet icon-label" data-review-edit="${esc(w.id)}">${icon("edit")} Edit</button></div><ol class="review-exercises">${w.items.map((b) => `<li><strong>${b.exercises.map(esc).join(b.kind === "circuit" ? " + " : ' <span class="muted">or</span> ')}</strong>${b.exercises.length > 1 ? `<small>${b.kind === "circuit" ? "Circuit movements" : "Choose one when training"}</small>` : ""}</li>`).join("") || "<li>Open session · no exercise blocks</li>"}</ol></section>`).join("")}</div>`;
+  return `<section class="card review-intro"><p class="eyebrow">YOUR ROUTINE, READY TO GO</p><h2>${esc(r.name)}</h2>${SHOW_ROUTINE_SCHEDULE ? `<div class="routine-week">${r.days.map((id, i) => `<div class="plan-day"><span>${DAYS[i]}</span><strong>${esc(r.workouts.find((w) => w.id === id)?.name || "Rest day")}</strong></div>`).join("")}</div>` : ""}<label class="check-label"><input type="checkbox" id="activate-routine" ${draft.activate ? "checked" : ""}><span>Make this my active routine</span></label></section><div class="routine-review-grid">${r.workouts.map((w) => `<section class="card"><div class="section-head"><div><span class="eyebrow">${esc(w.type)}</span><h2>${esc(w.name)}</h2></div><button class="quiet icon-label" data-review-edit="${esc(w.id)}">${icon("edit")} Edit</button></div><ol class="review-exercises">${w.items.map((b) => `<li><strong>${b.exercises.map(esc).join(b.kind === "circuit" ? " + " : ' <span class="muted">or</span> ')}</strong>${b.exercises.length > 1 ? `<small>${b.kind === "circuit" ? "Circuit movements" : "Choose one when training"}</small>` : ""}</li>`).join("") || "<li>Open session · no exercise blocks</li>"}</ol></section>`).join("")}</div>`;
 }
 export function routinePage(ctx, action, id) {
   if (!action) return library(ctx);
@@ -69,7 +73,7 @@ export function routinePage(ctx, action, id) {
     draft = editor.value;
   return (
     heading(
-      "A WEEK BUILT AROUND YOU",
+      "TRAINING BUILT AROUND YOU",
       action === "edit" ? "Edit your routine." : "Build your next routine.",
       "A little structure. Room to make it your own.",
       `<a class="secondary" href="#routines">All routines</a>`,
@@ -178,6 +182,8 @@ export function bindRoutinePage(ctx, action, id) {
   };
   const step = (phase) => {
     try {
+      if (draft.routine && !SHOW_ROUTINE_SCHEDULE)
+        draft.routine.scheduleEnabled = false;
       if (phase === 3) validateRoutines([draft.routine], ctx.exercises);
       draft.phase = phase;
       persist();
@@ -216,40 +222,36 @@ export function bindRoutinePage(ctx, action, id) {
     const form = document.querySelector("#routine-setup");
     form.elements.name.oninput = () => {
       draft.name = form.elements.name.value;
-      persist();
-    };
-    form.elements.count.onchange = () => {
-      draft.count = Number(form.elements.count.value);
+      if (draft.routine) draft.routine.name = draft.name;
       persist();
     };
     form.onsubmit = (event) => {
       event.preventDefault();
       draft.name = form.elements.name.value.trim();
-      draft.count = Number(form.elements.count.value);
       const build = () => {
-        if (
-          !draft.routine ||
-          draft.routine.format !== draft.format ||
-          draft.routine.workouts.length !== draft.count
-        ) {
-          const next = createRoutine(draft.format, draft.count, draft.name);
+        if (!draft.routine || draft.routine.format !== draft.format) {
+          const next = createRoutine(
+            draft.format,
+            FORMATS.find((f) => f.id === draft.format).count,
+            draft.name,
+          );
           if (draft.original) {
             next.id = draft.original.id;
             next.createdAt = draft.original.createdAt;
           }
           draft.routine = next;
         } else draft.routine.name = draft.name;
+        draft.count = draft.routine.workouts.length;
         draft.selectedWorkout = draft.routine.workouts[0].id;
         step(2);
       };
       if (
         draft.routine?.workouts.some((w) => w.items.length) &&
-        (draft.routine.format !== draft.format ||
-          draft.routine.workouts.length !== draft.count)
+        draft.routine.format !== draft.format
       )
         modal(
           "Replace the workout structure?",
-          "<p>This creates blank workouts for the new format and count. The exercise choices in this draft will be removed.</p>",
+          "<p>This creates blank workouts for the new format. The exercise choices in this draft will be removed.</p>",
           build,
           "Create blank workouts",
         );

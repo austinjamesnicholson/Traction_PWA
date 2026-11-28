@@ -1,6 +1,8 @@
 import { esc, modal, notify } from "../ui.js";
 import {
   DAYS,
+  SHOW_ROUTINE_SCHEDULE,
+  MAX_WORKOUTS,
   assignDay,
   addWorkout,
   removeWorkout,
@@ -11,14 +13,19 @@ import {
 import { icon } from "../icons.js";
 import { pickExercise } from "./exercise-picker.js";
 import { bindBlockDrag } from "../routine-drag.js";
+// Kept for later use when day scheduling is enabled again.
+function scheduleMarkup(routine) {
+  return `<section class="card routine-planner"><div class="section-head"><div><p class="eyebrow">MAKE ROOM FOR YOUR TRAINING</p><h2>Your weekly rhythm</h2></div><span class="badge">${routine.workouts.length} workouts · ${7 - routine.workouts.length} rest days</span></div><div class="routine-week editable-week">${routine.days.map((id, i) => `<label class="plan-day"><span>${DAYS[i]}</span><select data-day="${i}" aria-label="${DAYS[i]} workout"><option value="">Rest day</option>${routine.workouts.map((w) => `<option value="${esc(w.id)}" ${w.id === id ? "selected" : ""}>${esc(w.name)}</option>`).join("")}</select></label>`).join("")}</div><p class="fine-print">Schedule each workout once. Choosing a workout already on another day swaps the two days.</p></section>
+`;
+}
 export function routineEditorMarkup(ctx, draft) {
   const routine = draft.routine,
     workout =
       routine.workouts.find((w) => w.id === draft.selectedWorkout) ||
       routine.workouts[0];
   draft.selectedWorkout = workout.id;
-  return `<section class="card routine-planner"><div class="section-head"><div><p class="eyebrow">MAKE ROOM FOR YOUR TRAINING</p><h2>Your weekly rhythm</h2></div><span class="badge">${routine.workouts.length} workouts · ${7 - routine.workouts.length} rest days</span></div><label class="routine-name">Routine name<input id="builder-name" maxlength="80" value="${esc(routine.name)}" required></label><div class="routine-week editable-week">${routine.days.map((id, i) => `<label class="plan-day"><span>${DAYS[i]}</span><select data-day="${i}" aria-label="${DAYS[i]} workout"><option value="">Rest day</option>${routine.workouts.map((w) => `<option value="${esc(w.id)}" ${w.id === id ? "selected" : ""}>${esc(w.name)}</option>`).join("")}</select></label>`).join("")}</div><p class="fine-print">Schedule each workout once. Choosing a workout already on another day swaps the two days.</p></section>
-    <section class="workout-builder"><div class="section-head"><div><p class="eyebrow">BUILD EACH SESSION</p><h2>Workouts</h2></div><button class="secondary icon-label" id="add-workout" ${routine.workouts.length === 7 ? "disabled" : ""}>${icon("plus")} Add workout</button></div><div class="workout-tabs" role="tablist" aria-label="Workouts in this routine">${routine.workouts.map((w) => `<button role="tab" aria-selected="${w.id === workout.id}" aria-controls="workout-editor" data-workout="${esc(w.id)}" class="workout-tab ${w.id === workout.id ? "selected" : ""}"><span>${esc(w.name)}</span><small>${w.items.length} blocks</small></button>`).join("")}</div>
+  return `${SHOW_ROUTINE_SCHEDULE ? scheduleMarkup(routine) : ""}
+    <section class="workout-builder"><div class="section-head"><div><p class="eyebrow">${esc(routine.name)}</p><h2>Workouts</h2></div><button class="secondary icon-label" id="add-workout" ${routine.workouts.length === MAX_WORKOUTS ? "disabled" : ""}>${icon("plus")} Add workout</button></div><div class="workout-tabs" role="tablist" aria-label="Workouts in this routine">${routine.workouts.map((w) => `<button role="tab" aria-selected="${w.id === workout.id}" aria-controls="workout-editor" data-workout="${esc(w.id)}" class="workout-tab ${w.id === workout.id ? "selected" : ""}"><span>${esc(w.name)}</span><small>${w.items.length} blocks</small></button>`).join("")}</div>
     <section class="card workout-editor" id="workout-editor" role="tabpanel" aria-label="${esc(workout.name)} editor"><div class="workout-heading"><div class="workout-fields"><label>Workout name<input id="workout-name" maxlength="80" value="${esc(workout.name)}" required></label><label>Session type<select id="workout-type">${[
       ["weightlifting", "Weightlifting"],
       ["cardio", "Cardio"],
@@ -35,14 +42,14 @@ export function routineEditorMarkup(ctx, draft) {
     <p class="builder-hint">Each row is one exercise block. Add alternatives to choose between on workout day. Drag the grip to reorder, or use Up and Down.</p><div id="routine-blocks" class="routine-blocks">${workout.items
       .map(
         (block, index) =>
-          `<article class="routine-exercise-block" data-block-id="${esc(block.id)}"><div class="block-choices">${block.exercises
+          `<article class="routine-exercise-block" data-block-id="${esc(block.id)}"><div class="block-choices"><div class="exercise-selections">${block.exercises
             .map((name, option) => {
               const e = ctx.exercises.find((e) => e.name === name);
               return `<div class="exercise-choice"><div class="choice-tools"><button class="quiet icon-button" data-edit-block="${esc(block.id)}" data-option="${option}" aria-label="Change ${esc(name)}">${icon("edit")}</button><button class="quiet icon-button delete-choice" data-remove-choice="${esc(block.id)}" data-option="${option}" aria-label="Remove ${esc(name)}">${icon("trash")}</button></div><strong>${esc(name)}</strong><small>${esc(e?.majorMuscle || "")}${block.kind === "circuit" ? " · Circuit" : block.exercises.length > 1 ? " · Alternative" : ""}</small></div>`;
             })
             .join(
               "",
-            )}<button class="add-choice" data-option-block="${esc(block.id)}" ${block.exercises.length === 8 ? "disabled" : ""}><span>${block.kind === "circuit" ? "Add movement" : "Add option"}</span>${icon("plus")}</button></div><div class="block-order-controls"><button class="quiet grip" data-grip="${esc(block.id)}" aria-label="Drag to reorder block ${index + 1}. Keyboard: use the up and down arrow keys.">${icon("grip")}</button><div class="reorder-shortcuts"><button class="quiet" data-up="${esc(block.id)}" ${index === 0 ? "disabled" : ""} aria-label="Move block ${index + 1} up">Up</button><button class="quiet" data-down="${esc(block.id)}" ${index === workout.items.length - 1 ? "disabled" : ""} aria-label="Move block ${index + 1} down">Down</button></div></div></article>`,
+            )}</div><button class="add-choice" data-option-block="${esc(block.id)}" ${block.exercises.length === 8 ? "disabled" : ""}><span>${block.kind === "circuit" ? "Add movement" : "Add option"}</span>${icon("plus")}</button></div><div class="block-order-controls"><button class="quiet grip" data-grip="${esc(block.id)}" aria-label="Drag to reorder block ${index + 1}. Keyboard: use the up and down arrow keys.">${icon("grip")}</button><div class="reorder-shortcuts"><button class="quiet" data-up="${esc(block.id)}" ${index === 0 ? "disabled" : ""} aria-label="Move block ${index + 1} up">Up</button><button class="quiet" data-down="${esc(block.id)}" ${index === workout.items.length - 1 ? "disabled" : ""} aria-label="Move block ${index + 1} down">Down</button></div></div></article>`,
       )
       .join(
         "",
@@ -61,11 +68,6 @@ export function bindRoutineEditor(ctx, draft, persist) {
     } catch (error) {
       notify(error.message);
     }
-  };
-  document.querySelector("#builder-name").oninput = (event) => {
-    routine.name = event.target.value;
-    draft.name = routine.name;
-    persist();
   };
   document.querySelector("#workout-name").oninput = (event) => {
     workout.name = event.target.value;
