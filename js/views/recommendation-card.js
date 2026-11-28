@@ -17,7 +17,7 @@ function guidance(ctx, id, name, entry) {
 export function recommendationCard(ctx, id, name) {
   const user = ctx.cloud?.account;
   const entry = user ? cachedRecommendation(user.id, id, name) : null;
-  return `<section class="card ai-card"><p class="eyebrow">A LITTLE DIRECTION</p><h2>AI session guidance</h2><div id="ai-result" aria-live="polite">${entry ? guidance(ctx, id, name, entry) : "<p>Get suggested warm-up and working sets based on your saved history and current workout.</p>"}</div>${user ? `<button class="secondary" id="recommend">${entry ? "Refresh recommendation" : "Get recommendation"}</button>` : '<a class="secondary" href="#account">Sign in for guidance</a>'}<p class="fine-print">When requested, relevant saved workout history and notes are sent through Supabase to OpenAI. Guidance is advisory; it does not change your logged sets. Unsaved drafts and profile metrics are not sent.</p></section>`;
+  return `<section class="card ai-card"><p class="eyebrow">A LITTLE DIRECTION</p><h2>AI session guidance</h2><div id="ai-result" aria-live="polite">${entry ? guidance(ctx, id, name, entry) : "<p>Get suggested warm-up and working sets based on your saved history and current workout.</p>"}</div>${user ? `<button class="secondary" id="recommend">${entry ? "Refresh recommendation" : "Get recommendation"}</button>` : '<a class="secondary" href="#profile">Sign in for guidance</a>'}<p class="fine-print">When requested, relevant saved workout history and notes are sent through Supabase to OpenAI. Guidance is advisory; it does not change your logged sets. Unsaved drafts and profile metrics are not sent.</p></section>`;
 }
 export function bindRecommendation(ctx, id, name) {
   const button = document.querySelector("#recommend");

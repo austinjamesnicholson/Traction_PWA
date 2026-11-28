@@ -1,10 +1,14 @@
 import { heading, esc, notify, modal, download } from "../ui.js";
-export function account(ctx) {
+export function account(ctx, { embedded = false } = {}) {
+  const intro = (kicker, title, detail) =>
+    embedded
+      ? `<div class="section-head"><div><p class="eyebrow">${esc(kicker)}</p><h2>Account &amp; sync</h2><p>${esc(detail)}</p></div></div>`
+      : heading(kicker, title, detail);
   const cloud = ctx.cloud,
     user = cloud.account;
   if (cloud.recovery)
     return (
-      heading(
+      intro(
         "ACCOUNT RECOVERY",
         "Choose a new password.",
         "Use a strong password for your Traction account.",
@@ -13,7 +17,7 @@ export function account(ctx) {
     );
   if (user)
     return (
-      heading(
+      intro(
         "YOUR ACCOUNT",
         "Your journal, everywhere.",
         user.email || "Signed in",
@@ -21,7 +25,7 @@ export function account(ctx) {
       `<section class="card narrow"><h2>Cloud storage</h2><p id="account-status" role="status">${esc(cloud.status.message)}</p><p>Saved workouts, sets, profile metrics, and routine settings sync to your account. Exercise drafts stay on this device until saved.</p>${cloud.status.state === "conflict" ? `<div class="conflict-panel"><h3>Choose which edits to keep</h3><p>Different records will be combined. For records changed on both devices, choose a version. Export this device’s backup before choosing if you want a copy.</p><button id="conflict-backup" class="secondary">Export this device’s backup</button><div class="actions"><button class="secondary" data-resolve="local">Keep this device’s conflicting edits</button><button class="secondary" data-resolve="cloud">Keep cloud’s conflicting edits</button></div></div>` : ""}<div class="actions"><button class="primary" id="sync-now">Sync now</button><button class="secondary" id="sign-out">Sign out</button></div><p class="fine-print">Signing out opens your separate device-only journal. Unsynced account changes stay in this browser for the next time you sign in to this account. Use your own device; signing out does not erase its offline account cache.</p></section>`
     );
   return (
-    heading(
+    intro(
       "YOUR TRACTION ACCOUNT",
       "Train here. Pick up anywhere.",
       "Sign in to save your journal online and use it on your phone and computer.",
@@ -146,7 +150,7 @@ export function bindAccount(ctx) {
         async () => {
           try {
             await cloud.signOut();
-            location.hash = "#account";
+            location.hash = "#profile";
             ctx.render();
             notify("Signed out. Device-only journal opened.");
           } catch (error) {

@@ -112,7 +112,7 @@ export function createCloud({
           try {
             if (event === "PASSWORD_RECOVERY") {
               recovery = true;
-              location.hash = "#account";
+              location.hash = "#profile";
             }
             if (event === "SIGNED_OUT") recovery = false;
             attach(session);

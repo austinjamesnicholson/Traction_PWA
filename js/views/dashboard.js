@@ -1,6 +1,6 @@
 import { heading, esc, date, number, empty } from "../ui.js";
 import { recentVolume, sessionSets } from "../model.js";
-export function dashboard({ store, exercises, routines }) {
+export function dashboard({ store, exercises }) {
   const state = store.state;
   const completed = state.sessions
     .filter((s) => s.endedAt)
@@ -22,11 +22,9 @@ export function dashboard({ store, exercises, routines }) {
       "YOUR TRAINING, IN MOTION",
       "Keep showing up.",
       "Small steps. Stronger every session.",
-      `<a class="primary" href="#workouts">＋ Start workout</a>`,
+      `<a class="primary" href="${active.length ? "#session/" + encodeURIComponent(active[0].sessionID) : "#workouts"}">${active.length ? "Resume workout" : "＋ Start workout"}</a>`,
     ) +
-    `<section class="hero"><div class="hero-copy"><span class="tag">${esc(routines.find((r) => r.id === state.routine).name)}</span><h2>Make your next<br>session count.</h2><p>Your plan is ready. Pick up where you left off<br class="desktop"> or start a fresh workout.</p><a class="light-button" href="${active.length ? "#session/" + encodeURIComponent(active[0].sessionID) : "#workouts"}">${active.length ? "Resume workout" : "Choose a workout"}</a></div><div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="art-mark">t<span>.</span></div><span class="art-caption">ONE SESSION AT A TIME</span></div></section>
-    <div class="stats"><article class="stat"><span>Completed workouts</span><strong>${completed.length}</strong><small>Every session adds up</small></article><article class="stat"><span>Saved sets</span><strong>${state.sets.length}</strong><small>Your work, recorded</small></article><article class="stat"><span>Last 7 days</span><strong>${completed.filter((s) => new Date(s.startedAt) >= new Date(today.getTime() - 7 * 86400000)).length}<em> workouts</em></strong><small>Keep building momentum</small></article></div>
-    <div class="dashboard-grid"><section class="card"><div class="section-head"><div><p class="eyebrow">BUILD YOUR CONSISTENCY</p><h2>Your week at a glance</h2></div><span class="muted">${days[0].toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${days[6].toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><div class="week">${days
+    `<div class="dashboard-grid"><section class="card"><div class="section-head"><div><p class="eyebrow">BUILD YOUR CONSISTENCY</p><h2>Your week at a glance</h2></div><span class="muted">${days[0].toLocaleDateString(undefined, { month: "short", day: "numeric" })} – ${days[6].toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span></div><div class="week">${days
       .map((d, i) => {
         const sessions = daySessions(d);
         const done = sessions.filter((s) => s.endedAt).length;

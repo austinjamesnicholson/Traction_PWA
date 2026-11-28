@@ -1,3 +1,11 @@
+# Profile and Overview simplification
+
+- Combined Profile and Account & sync, with metrics first and account controls beneath. Existing #account links redirect to Profile; sign-in, sign-out, recovery, sync status, and conflict resolution use the combined page.
+- Removed the global account banner and the Overview hero and three summary cards. Overview's primary action resumes an in-progress workout or starts a new one when none is active.
+- Live test data is restricted to the existing tester1 account, as recorded in AGENTS.md. This change used only isolated local fixtures and made no live account or journal changes.
+- npm test: 76 passing tests, including Overview start/resume behavior, combined Profile controls, and password-recovery navigation. npm run check passes for all 41 offline assets.
+- Service-worker cache v6 includes these updates. Browser visual and physical-device verification remain unavailable in this session.
+
 # Verification of the routine builder
 
 ## Completed in this update

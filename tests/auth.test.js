@@ -160,6 +160,7 @@ test("password reset uses the app URL and recovery must be established before up
   f.emit("PASSWORD_RECOVERY");
   await new Promise((resolve) => setTimeout(resolve, 10));
   assert(f.cloud.recovery);
+  assert.equal(location.hash, "#profile");
   await f.cloud.updatePassword("password-456");
   assert(!f.cloud.recovery);
   assert(f.calls.some((c) => c[0] === "password"));

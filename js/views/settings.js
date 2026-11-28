@@ -1,5 +1,6 @@
 import { heading, esc, modal, notify, download } from "../ui.js";
 import { importLegacy } from "../model.js";
+import { account, bindAccount } from "./account.js";
 import { validateState } from "../store.js";
 export function profile(ctx) {
   const p = ctx.store.state.profile;
@@ -9,10 +10,12 @@ export function profile(ctx) {
       "Your profile",
       "Your body metrics are private to your journal. Sign in to sync them across devices.",
     ) +
-    `<section class="card narrow"><h2>Body metrics</h2><form id="profile-form"><div class="form-grid"><label>Height (feet)<input type="number" name="feet" min="0" max="9" step="1" value="${esc(p.feet)}"></label><label>Height (inches)<input type="number" name="inches" min="0" max="11" step="1" value="${esc(p.inches)}"></label><label>Body weight (lb)<input type="number" name="weight" min="0" max="1500" step="any" value="${esc(p.weight)}"></label><label>Age (years)<input type="number" name="age" min="1" max="120" step="1" value="${esc(p.age)}"></label></div><div class="actions"><button class="primary">Save profile</button></div></form></section>`
+    `<section class="card narrow"><h2>Body metrics</h2><form id="profile-form"><div class="form-grid"><label>Height (feet)<input type="number" name="feet" min="0" max="9" step="1" value="${esc(p.feet)}"></label><label>Height (inches)<input type="number" name="inches" min="0" max="11" step="1" value="${esc(p.inches)}"></label><label>Body weight (lb)<input type="number" name="weight" min="0" max="1500" step="any" value="${esc(p.weight)}"></label><label>Age (years)<input type="number" name="age" min="1" max="120" step="1" value="${esc(p.age)}"></label></div><div class="actions"><button class="primary">Save profile</button></div></form></section>` +
+    `<section id="profile-account">${account(ctx, { embedded: true })}</section>`
   );
 }
 export function bindProfile(ctx) {
+  bindAccount(ctx);
   document.querySelector("#profile-form").onsubmit = (event) => {
     event.preventDefault();
     const data = Object.fromEntries(new FormData(event.target));
@@ -28,7 +31,7 @@ export function settings(ctx) {
     `<div class="settings-grid"><section class="card"><p class="eyebrow">THE PLAN YOU FOLLOW</p><h2>Active routine</h2><label>Choose your routine<select id="routine">${ctx.routines.map((r) => `<option value="${r.id}" ${r.id === ctx.store.state.routine ? "selected" : ""}>${esc(r.name)} — ${esc(r.subtitle)}</option>`).join("")}</select></label><p>Changes the workouts shown first. Existing workout history stays together.</p><a class="secondary" href="#routines">Build or manage routines</a></section>
     <section class="card"><p class="eyebrow">KEEP YOUR HISTORY CLOSE</p><h2>Backup & import</h2><p>Sign in to sync saved workouts across devices. Export a backup for an extra copy. Unsaved drafts stay on this device.</p><div class="actions"><button class="secondary" id="export">Export backup</button><label class="secondary file-button">Import JSON<input type="file" id="import" accept=".json,application/json"></label></div><p class="fine-print">Accepts a PWA backup or the original setEntryLibrary.json. Legacy imports merge sets and ignore duplicates; backups replace this device’s data after confirmation.</p><a href="#database">Review saved database</a></section>
     <section class="card"><p class="eyebrow">ON YOUR HOME SCREEN</p><h2>Install Traction</h2><p>On iPhone, open this app in Safari, tap Share, then Add to Home Screen. In Chrome or Edge, use the browser’s Install app option.</p><p>Open the app online once before using it offline. Workout logging, history, and charts work offline.</p><button class="secondary" id="check-update">Check for app update</button><p id="update-status" role="status"></p></section>
-    <section class="card"><p class="eyebrow">YOUR ACCOUNT</p><h2>Accounts & cloud storage</h2><p>Sign in to save workouts, routine settings, and profile metrics in your private Traction account.</p><a class="primary" href="#account">Open account & sync</a><p class="fine-print">Signed-in users can request AI guidance from an exercise log. Saved history and notes are sent only when you request it.</p></section></div>`
+    <section class="card"><p class="eyebrow">YOUR ACCOUNT</p><h2>Accounts & cloud storage</h2><p>Sign in to save workouts, routine settings, and profile metrics in your private Traction account.</p><a class="primary" href="#profile">Open profile & account</a><p class="fine-print">Signed-in users can request AI guidance from an exercise log. Saved history and notes are sent only when you request it.</p></section></div>`
   );
 }
 export function bindSettings(ctx) {

@@ -1,6 +1,5 @@
 import { STORAGE_KEY } from "./store.js";
 import { createCloud } from "./cloud.js";
-import { account, bindAccount } from "./views/account.js";
 import { clearRecommendations } from "./recommendations.js";
 import { listRoutines, listTemplates } from "./routines.js";
 import { routinePage, bindRoutinePage } from "./views/routine-builder.js";
@@ -60,7 +59,6 @@ try {
     library: [library, bindLibrary],
     profile: [profile, bindProfile],
     settings: [settings, bindSettings],
-    account: [account, bindAccount],
     routines: [routinePage, bindRoutinePage],
   };
   let started = false,
@@ -78,7 +76,7 @@ try {
         ctx.routineEditor = null;
         owner = next;
         clearDirty();
-        location.hash = "#account";
+        location.hash = "#profile";
       } else if (
         ctx.routineEditor &&
         /^routines\/(new|edit)/.test(ctx.routeKey)
@@ -87,16 +85,12 @@ try {
       render();
     },
     onStatus(status) {
-      document.querySelector("#cloud-status").textContent = status.message;
-      document.querySelector("#account-link").textContent = ctx.cloud?.account
-        ? "Account & sync"
-        : "Sign in";
       const node = document.querySelector("#account-status");
       if (node) node.textContent = status.message;
       const conflict = status.state === "conflict";
       if (
         started &&
-        ctx.routeKey === "account" &&
+        ctx.routeKey === "profile" &&
         cloud.account &&
         conflict !== lastConflict
       )
@@ -113,9 +107,17 @@ try {
         globalThis.history.replaceState(
           null,
           "",
-          location.pathname + location.search + "#account",
+          location.pathname + location.search + "#profile",
         );
-        rawRoute = "account";
+        rawRoute = "profile";
+      }
+      if (rawRoute === "account") {
+        globalThis.history.replaceState(
+          null,
+          "",
+          location.pathname + location.search + "#profile",
+        );
+        rawRoute = "profile";
       }
       const [page, ...args] = (rawRoute || "dashboard")
         .split("/")
@@ -186,7 +188,7 @@ try {
   });
   window.addEventListener("traction-account-change", () => {
     clearDirty();
-    location.hash = "#account";
+    location.hash = "#profile";
     render();
   });
   await cloud.start();

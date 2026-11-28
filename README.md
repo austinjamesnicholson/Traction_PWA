@@ -8,15 +8,15 @@ This is a separate implementation of the original Traction iPhone app. The origi
 
 ## Accounts and cloud storage
 
-Open **Account & sync** in the navigation or **Sign in** at the top of the page.
+Open **Profile** and scroll to **Account & sync** beneath your body metrics.
 
 1. Choose **Create account** and enter your email and a password of at least eight characters.
 2. Confirm your email, then sign in.
 3. Use the same account on your other devices.
 
-Saved workout sessions, set entries, skip notes, alternate exercises, profile metrics, custom routines, and routine selection sync automatically. Changes save locally first and upload when connected. **Sync now** checks immediately. The account bar reports pending changes, offline use, errors, and successful cloud saves.
+Saved workout sessions, set entries, skip notes, alternate exercises, profile metrics, custom routines, and routine selection sync automatically. Changes save locally first and upload when connected. **Sync now** checks immediately. The Profile tab reports pending changes, offline use, errors, and successful cloud saves.
 
-Different records changed on different devices combine automatically. If both devices change the same record, **Account & sync** asks which conflicting edits to keep. Export a backup before resolving a conflict for an extra copy.
+Different records changed on different devices combine automatically. If both devices change the same record, **Profile > Account & sync** asks which conflicting edits to keep. Export a backup before resolving a conflict for an extra copy.
 
 **Exercise drafts stay on the device where you type them.** Press **Save sets** to include them in your saved workout and cloud sync.
 
@@ -28,7 +28,7 @@ Signing out opens your separate device-only journal. Account caches, including p
 
 ## Workout features
 
-- Dashboard with a rolling seven-day calendar, completed workouts, saved sets, recent sessions, and weighted primary/secondary muscle volume.
+- Dashboard with a rolling seven-day calendar, recent sessions, weighted primary/secondary muscle volume, and a Start/Resume workout button.
 - Austin's and Lizzie's routines, all ten original templates, and all 66 exercise definitions.
 - Start/resume/finish workouts, select variations, choose alternates, and skip blocks with notes.
 - Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states. New rows keep chronological entry order through batch saves and cloud sync. Changed exercise saves play a short positive chime.
