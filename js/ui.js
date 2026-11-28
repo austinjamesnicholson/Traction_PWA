@@ -39,6 +39,7 @@ export function modal(title, body, onSubmit, submitLabel = "Save") {
     .forEach((button) => (button.onclick = () => dialog.close()));
   dialog.querySelector("form").onsubmit = async (event) => {
     event.preventDefault();
+    if (!onSubmit) return;
     try {
       if ((await onSubmit(new FormData(event.target))) !== false)
         dialog.close();

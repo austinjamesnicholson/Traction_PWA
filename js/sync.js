@@ -19,13 +19,19 @@ const canonical = (value) =>
 export const equal = (a, b) =>
   JSON.stringify(canonical(a)) === JSON.stringify(canonical(b));
 export function cloudDocument(state) {
-  return { ...copy(state), revision: 0, drafts: {} };
+  return {
+    ...copy(state),
+    customRoutines: copy(state.customRoutines || []),
+    revision: 0,
+    drafts: {},
+  };
 }
 const collections = {
   sessions: "sessionID",
   sets: "setID",
   skips: "skipID",
   replacements: "replacementID",
+  customRoutines: "id",
 };
 export function mergeDocuments(base, local, remote, prefer) {
   const conflicts = [];
@@ -38,7 +44,7 @@ export function mergeDocuments(base, local, remote, prefer) {
   const result = cloudDocument(remote);
   for (const [name, id] of Object.entries(collections)) {
     const maps = [base, local, remote].map(
-      (s) => new Map(s[name].map((r) => [r[id], r])),
+      (s) => new Map((s[name] || []).map((r) => [r[id], r])),
     );
     result[name] = [...new Set(maps.flatMap((m) => [...m.keys()]))]
       .sort()
@@ -53,6 +59,11 @@ export function mergeDocuments(base, local, remote, prefer) {
     remote.routine,
     "routine",
   );
+  if (
+    !["austin", "lizzie"].includes(result.routine) &&
+    !result.customRoutines.some((r) => r.id === result.routine)
+  )
+    result.routine = "austin";
   result.profile = {};
   for (const field of ["feet", "inches", "weight", "age"])
     result.profile[field] = choose(

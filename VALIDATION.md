@@ -1,4 +1,18 @@
-﻿# Verification of the AI and exercise-log update
+# Verification of the routine builder
+
+## Completed in this update
+
+- npm test: 73 passing tests. New coverage includes all five formats and workout counts, weekly day swaps and rest days, exercise alternatives/edit/remove/reorder, combined search filters, routine save/edit conflicts/delete, copying original circuit/cardio plans, legacy journal compatibility, JSON round-trip, two-device sync and account separation, simultaneous routine edits, draft recovery and cross-tab protection, and rendering all builder phases.
+- npm run check: syntax, imports, all 41 offline assets, icons, 66 exercises, and ten original templates. Service-worker cache is v4.
+- Supabase migration accepts custom routine libraries while retaining existing journal validation, RLS ownership policies, and revision checks. A live rolled-back test verified legacy and custom saves, stale-write rejection, missing-active-routine rejection, and foreign-owner denial. It used synthetic accounts and left no test records.
+- Each newly started session stores its own template snapshot. Tests verify that renaming, changing, or deleting a routine preserves active and completed workouts.
+- Saved routines use the existing account sync and backups. Builder drafts stay on the originating device in account-separated keys. Concurrent drafts and saved edits cannot silently overwrite newer changes.
+
+## Verification limits
+
+The browser access host was unavailable, so visual browser QA and physical iPhone touch dragging are not verified. Reorder buttons and keyboard controls provide alternatives to dragging. Cardio and other workout days can be planned, but dedicated distance/GPS logging and automatic circuit rotation remain future features.
+
+﻿## Previous AI and exercise-log verification
 
 ## Completed
 

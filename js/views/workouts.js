@@ -8,6 +8,7 @@ import {
   skipBlock,
   sessionSets,
 } from "../model.js";
+import { sessionTemplate, DAYS } from "../routines.js";
 export function workouts(ctx) {
   const { store, templates, routines } = ctx;
   const routine = routines.find((r) => r.id === store.state.routine);
@@ -17,7 +18,7 @@ export function workouts(ctx) {
       "YOUR NEXT SESSION",
       "Let’s get to work.",
       routine.name + " · " + routine.subtitle,
-      `<a class="secondary" href="#settings">Change routine</a>`,
+      `<a class="secondary" href="#routines">Manage routines</a>`,
     ) +
     active
       .map(
@@ -25,6 +26,9 @@ export function workouts(ctx) {
           `<a class="resume-banner" href="#session/${encodeURIComponent(s.sessionID)}"><span>◷ <strong>${esc(s.templateName)}</strong> is in progress</span><span>Resume workout</span></a>`,
       )
       .join("") +
+    (routine.custom
+      ? `<section class="card"><div class="section-head"><h2>Your weekly plan</h2><a href="#routines/edit/${encodeURIComponent(routine.id)}">Edit routine</a></div><div class="routine-week">${routine.days.map((id, i) => `<div class="plan-day ${i === (new Date().getDay() + 6) % 7 ? "today" : ""}"><span>${DAYS[i]}</span><strong>${esc(routine.workouts.find((w) => w.id === id)?.name || "Rest")}</strong></div>`).join("")}</div></section>`
+      : "") +
     `<div class="template-grid">${templates
       .filter((t) => routine.templateIDs.includes(t.id))
       .map(
@@ -54,7 +58,13 @@ export function bindWorkouts(ctx) {
         }
         const session = {
           sessionID: uid(),
-          templateName: b.dataset.start,
+          templateName: ctx.templates.find((t) => t.id === b.dataset.start)
+            .name,
+          templateID: b.dataset.start,
+          routineID: ctx.store.state.routine,
+          templateSnapshot: structuredClone(
+            ctx.templates.find((t) => t.id === b.dataset.start),
+          ),
           startedAt: now(),
           endedAt: null,
         };
@@ -71,7 +81,7 @@ export function session(ctx, id) {
       "This workout is complete",
       "Open History to review or correct its saved sets.",
     );
-  const template = ctx.templates.find((t) => t.name === s.templateName);
+  const template = sessionTemplate(s, ctx.templates);
   const blocks = blocksFor(template, ctx.exercises);
   const done = blocks.filter((b) =>
     ["Completed", "Skipped"].includes(blockStatus(ctx.store.state, id, b)),
@@ -109,10 +119,7 @@ export function session(ctx, id) {
 export function bindSession(ctx, id) {
   const s = ctx.store.state.sessions.find((s) => s.sessionID === id);
   if (!s || s.endedAt) return;
-  const blocks = blocksFor(
-    ctx.templates.find((t) => t.name === s.templateName),
-    ctx.exercises,
-  );
+  const blocks = blocksFor(sessionTemplate(s, ctx.templates), ctx.exercises);
   const find = (b) => blocks.find((x) => x.id === b);
   document.querySelector("#end-workout").onclick = () => {
     if (
@@ -194,11 +201,13 @@ export function bindSession(ctx, id) {
             .flatMap((e) => [e.majorMuscle, e.minorMuscle])
             .filter(Boolean),
         );
+        const preferredTypes = new Set(originals.map((e) => e.type));
         const all = ctx.exercises.filter(
           (e) =>
-            e.type ===
-              ctx.templates.find((t) => t.name === s.templateName)
-                .exerciseType && !block.exercises.includes(e.name),
+            (preferredTypes.size
+              ? preferredTypes.has(e.type)
+              : e.type === sessionTemplate(s, ctx.templates).exerciseType) &&
+            !block.exercises.includes(e.name),
         );
         const recommended = all.filter(
           (e) => muscles.has(e.majorMuscle) || muscles.has(e.minorMuscle),

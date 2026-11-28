@@ -2,6 +2,8 @@ import { STORAGE_KEY } from "./store.js";
 import { createCloud } from "./cloud.js";
 import { account, bindAccount } from "./views/account.js";
 import { clearRecommendations } from "./recommendations.js";
+import { listRoutines, listTemplates } from "./routines.js";
+import { routinePage, bindRoutinePage } from "./views/routine-builder.js";
 import { empty, notify, download } from "./ui.js";
 import { setupPWA, activateUpdate } from "./pwa.js";
 import { dashboard } from "./views/dashboard.js";
@@ -20,25 +22,6 @@ import {
   settings,
   bindSettings,
 } from "./views/settings.js";
-const routines = [
-  {
-    id: "austin",
-    name: "Austin's Routine",
-    subtitle: "Push / Pull / Legs",
-    templateIDs: ["Austin Push", "Austin Pull", "Austin Legs"],
-  },
-  {
-    id: "lizzie",
-    name: "Lizzie's Routine",
-    subtitle: "Push / Pull / Legs / Wednesday Cycle",
-    templateIDs: [
-      "Lizzie Push",
-      "Lizzie Pull",
-      "Lizzie Legs",
-      "Lizzie Wednesday Cycle",
-    ],
-  },
-];
 const main = document.querySelector("#main");
 try {
   const [exercises, templates] = await Promise.all(
@@ -56,8 +39,13 @@ try {
     store: null,
     cloud: null,
     exercises,
-    templates,
-    routines,
+    builtinTemplates: templates,
+    get templates() {
+      return listTemplates(this.store?.state, templates);
+    },
+    get routines() {
+      return listRoutines(this.store?.state);
+    },
     render,
     activateUpdate,
     routeKey: "",
@@ -73,6 +61,7 @@ try {
     profile: [profile, bindProfile],
     settings: [settings, bindSettings],
     account: [account, bindAccount],
+    routines: [routinePage, bindRoutinePage],
   };
   let started = false,
     owner = null,
@@ -86,10 +75,15 @@ try {
       const next = cloud.account?.id || null;
       if (owner !== next) {
         clearRecommendations();
+        ctx.routineEditor = null;
         owner = next;
         clearDirty();
         location.hash = "#account";
-      }
+      } else if (
+        ctx.routineEditor &&
+        /^routines\/(new|edit)/.test(ctx.routeKey)
+      )
+        return;
       render();
     },
     onStatus(status) {
@@ -155,6 +149,7 @@ try {
           settings: "Settings",
           database: "Database",
           account: "Account & sync",
+          routines: "Routine builder",
         }[page] || "Page");
       document.title =
         (page === "dashboard"

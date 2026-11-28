@@ -1,9 +1,10 @@
 // Increment the version after changing app-shell files.
-const CACHE = "traction-shell-v3";
+const CACHE = "traction-shell-v4";
 const ASSETS = [
   "./",
   "./index.html",
   "./css/styles.css",
+  "./css/routines.css",
   "./manifest.webmanifest",
   "./icons/icon.svg",
   "./icons/icon-192.png",
@@ -15,6 +16,14 @@ const ASSETS = [
   "./js/app.js",
   "./js/store.js",
   "./js/model.js",
+  "./js/routines.js",
+  "./js/routine-draft.js",
+  "./js/routine-drag.js",
+  "./js/exercise-catalog.js",
+  "./js/icons.js",
+  "./js/views/routine-builder.js",
+  "./js/views/routine-editor.js",
+  "./js/views/exercise-picker.js",
   "./js/exercise-log.js",
   "./js/sounds.js",
   "./js/views/recommendation-card.js",

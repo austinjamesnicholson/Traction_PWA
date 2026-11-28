@@ -1,10 +1,16 @@
 import { validSet } from "./model.js";
+import {
+  validateRoutines,
+  validateTemplate,
+  sessionTemplate,
+} from "./routines.js";
 export const STORAGE_KEY = "traction-pwa-v1";
 export function freshState() {
   return {
     version: 1,
     revision: 0,
     routine: "austin",
+    customRoutines: [],
     sessions: [],
     sets: [],
     skips: [],
@@ -17,7 +23,7 @@ export function validateState(state, exercises, templates) {
   if (
     !state ||
     state.version !== 1 ||
-    !["austin", "lizzie"].includes(state.routine) ||
+    typeof state.routine !== "string" ||
     !["sessions", "sets", "skips", "replacements"].every((k) =>
       Array.isArray(state[k]),
     ) ||
@@ -28,6 +34,12 @@ export function validateState(state, exercises, templates) {
     Array.isArray(state.drafts)
   )
     throw new Error("This is not a supported Traction backup.");
+  validateRoutines(state.customRoutines || [], exercises);
+  if (
+    !["austin", "lizzie"].includes(state.routine) &&
+    !(state.customRoutines || []).some((r) => r.id === state.routine)
+  )
+    throw new Error("The active routine is missing from this journal.");
   const unique = (rows, key) =>
     rows.every((r) => r && typeof r[key] === "string" && r[key]) &&
     new Set(rows.map((r) => r[key])).size === rows.length;
@@ -103,12 +115,12 @@ export function validateState(state, exercises, templates) {
   for (const key of ["feet", "inches", "weight", "age"])
     if (!["string", "number"].includes(typeof state.profile[key]))
       throw new Error("Backup contains invalid profile fields.");
-  if (
-    state.sessions.some(
-      (s) => !s.endedAt && !templates.some((t) => t.name === s.templateName),
-    )
-  )
-    throw new Error("Backup has an active workout with an unknown template.");
+  for (const session of state.sessions) {
+    if (session.templateSnapshot)
+      validateTemplate(session.templateSnapshot, exercises);
+    if (!session.endedAt && !sessionTemplate(session, templates))
+      throw new Error("Backup has an active workout with an unknown template.");
+  }
   return state;
 }
 export function createStore(storage, exercises, templates) {

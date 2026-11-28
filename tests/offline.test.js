@@ -111,7 +111,7 @@ test("activation removes only old Traction caches and preserves Waypoint", async
   await w.fire("activate");
   assert(w.stores.has("waypoint-v5"));
   assert(!w.stores.has("traction-shell-old"));
-  assert(w.stores.has("traction-shell-v3"));
+  assert(w.stores.has("traction-shell-v4"));
 });
 test("updates wait until explicitly activated", async () => {
   const w = worker();

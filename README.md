@@ -14,7 +14,7 @@ Open **Account & sync** in the navigation or **Sign in** at the top of the page.
 2. Confirm your email, then sign in.
 3. Use the same account on your other devices.
 
-Saved workout sessions, set entries, skip notes, alternate exercises, profile metrics, and routine selection sync automatically. Changes save locally first and upload when connected. **Sync now** checks immediately. The account bar reports pending changes, offline use, errors, and successful cloud saves.
+Saved workout sessions, set entries, skip notes, alternate exercises, profile metrics, custom routines, and routine selection sync automatically. Changes save locally first and upload when connected. **Sync now** checks immediately. The account bar reports pending changes, offline use, errors, and successful cloud saves.
 
 Different records changed on different devices combine automatically. If both devices change the same record, **Account & sync** asks which conflicting edits to keep. Export a backup before resolving a conflict for an extra copy.
 
@@ -38,6 +38,19 @@ Signing out opens your separate device-only journal. Account caches, including p
 - JSON backup/restore and duplicate-safe import of the original setEntryLibrary.json.
 
 The original circuit and cardio features were placeholders. Individual exercise logging inside circuit blocks is available, but not automatic circuit rotation, GPS, watch/HealthKit integration, or cardio distance entry. See [REVIEW.md](REVIEW.md).
+
+## Build a routine
+
+Open **Routines > New routine**.
+
+1. Choose Full Body, Push/Pull/Legs, Upper/Lower, Body-part Split, or Custom. Name the routine and choose one to seven workouts.
+2. Arrange the seven-day week, leaving rest days where you want them. Rename workouts or mark them as weightlifting, cardio, or other.
+3. Tap **Add exercise** and search or filter by body part, region, and movement. **Add option** adds an alternative in the same block; choose one when training. The pencil changes a selection and the trash icon removes it.
+4. Drag a block's grip to reorder it, or use its Up/Down buttons. Review and save, optionally making it active.
+
+Custom routine cards support edit, copy, activate, and delete. Original routines can be copied into an editable plan. Started workouts retain their original exercise plan even if you edit or delete the routine. Unfinished builder drafts restore on the same device and remain separate for each account; only saved routines sync. Each workout is scheduled once per week in this first version.
+
+For an existing Supabase installation, apply [supabase/routine-schema.sql](supabase/routine-schema.sql) once; new installations use the updated schema.sql. The hosted Traction_PWA project already has this change.
 
 ## Install
 
@@ -67,6 +80,7 @@ The GitHub Actions workflow runs checks when main changes and respects the exist
 - js/cloud.js: authentication and network adapter.
 - js/sync.js: account caches, offline queue, three-way merging.
 - js/store.js: journal validation and device-only storage.
+- js/routines.js, js/routine-draft.js, js/exercise-catalog.js, js/routine-drag.js, and css/routines.css: routine plans, private device drafts, exercise filters, reordering, and builder styling.
 - js/model.js and js/charts.js: workout calculations and charts.
 - js/config.js: public project settings and AI feature switch.
 - js/vendor/: pinned Supabase SDK and MIT license.
