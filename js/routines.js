@@ -240,7 +240,7 @@ export function validateRoutines(
     }
     const scheduled = r.days.filter(Boolean);
     if (
-      scheduled.length !== r.workouts.length ||
+      (!allowEmpty && scheduled.length !== r.workouts.length) ||
       new Set(scheduled).size !== scheduled.length ||
       scheduled.some((id) => !r.workouts.some((w) => w.id === id)) ||
       r.days.some((id) => id !== null && typeof id !== "string")

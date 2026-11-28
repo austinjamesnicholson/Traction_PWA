@@ -217,6 +217,7 @@ test("unfinished drafts restore blank names and alternatives while remaining acc
     r = complete("custom", 1);
   r.name = "";
   r.workouts[0].name = "";
+  r.days = Array(7).fill(null);
   addExercise(r.workouts[0], names[1], r.workouts[0].items[0].id);
   const initial = {
     phase: 2,
