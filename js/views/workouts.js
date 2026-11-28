@@ -8,6 +8,7 @@ import {
   skipBlock,
   sessionSets,
 } from "../model.js";
+import { workoutCard, bindWorkoutPreviews } from "./workout-card.js";
 import { sessionTemplate, DAYS, SHOW_ROUTINE_SCHEDULE } from "../routines.js";
 export function workouts(ctx) {
   const { store, templates, routines } = ctx;
@@ -29,24 +30,25 @@ export function workouts(ctx) {
     (routine.custom && SHOW_ROUTINE_SCHEDULE
       ? `<section class="card"><div class="section-head"><h2>Your weekly plan</h2><a href="#routines/edit/${encodeURIComponent(routine.id)}">Edit routine</a></div><div class="routine-week">${routine.days.map((id, i) => `<div class="plan-day ${i === (new Date().getDay() + 6) % 7 ? "today" : ""}"><span>${DAYS[i]}</span><strong>${esc(routine.workouts.find((w) => w.id === id)?.name || "Rest")}</strong></div>`).join("")}</div></section>`
       : "") +
-    `<div class="template-grid">${templates
+    `<div class="workout-selection-grid">${templates
       .filter((t) => routine.templateIDs.includes(t.id))
-      .map(
-        (t) =>
-          `<article class="card template-card"><span class="workout-icon">${t.exerciseType === "Push" ? "↗" : t.exerciseType === "Pull" ? "≋" : "⌁"}</span><p class="eyebrow">${esc(t.exerciseType.toUpperCase())}</p><h2>${esc(t.name)}</h2><p>${esc(t.subtitle)}</p><div class="template-bottom"><span class="muted">${t.items.length ? t.items.length + " exercise blocks" : "Open session"}</span><button class="primary" data-start="${esc(t.id)}">Start workout</button></div></article>`,
-      )
+      .map((t) => workoutCard(t, ctx.exercises, routine.name))
       .join(
         "",
-      )}</div><details class="card"><summary>Other workout templates</summary><div class="list">${templates
+      )}</div><details class="card other-workouts"><summary>Other workout templates</summary><div class="workout-selection-grid">${templates
       .filter((t) => !routine.templateIDs.includes(t.id))
-      .map(
-        (t) =>
-          `<div class="row between"><div><h3>${esc(t.name)}</h3><p>${esc(t.subtitle)}</p></div><button class="secondary" data-start="${esc(t.id)}">Start</button></div>`,
+      .map((t) =>
+        workoutCard(
+          t,
+          ctx.exercises,
+          routines.find((r) => r.templateIDs.includes(t.id))?.name,
+        ),
       )
       .join("")}</div></details>`
   );
 }
 export function bindWorkouts(ctx) {
+  bindWorkoutPreviews();
   document.querySelectorAll("[data-start]").forEach(
     (b) =>
       (b.onclick = () => {

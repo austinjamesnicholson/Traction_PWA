@@ -1,3 +1,10 @@
+# Compact workout cards and separate draft actions
+
+- Workouts use compact cards with routine/workout names, Select workout at the top right, and numbered previews that expand above a bottom Collapse control. Alternatives stay grouped; circuit previews are labeled. Previews start collapsed and do not create a session.
+- Routine cards omit decorative symbols, reduce padding and type sizes, and summarize long workout lists. New routine and Continue draft are separate controls. New routine warns before discarding an existing new-routine draft; cancellation leaves it intact. Cross-tab and account-switch guards prevent deleting a newer or different account's draft.
+- Header uses the original Traction logo and name in place of the route breadcrumb.
+- npm test: 84 passing checks, including preview order/grouping/toggling and draft replacement/cancellation/isolation. npm run check covers all 42 offline assets; cache version v9. No live account data was created or changed. Physical iPhone visual testing remains unverified.
+
 # Mobile navigation and unified History
 
 - Mobile main navigation is fixed to the bottom with home-indicator padding. Settings and Profile use labeled, icon-only links at the top right; Profile uses a human-bust icon. Content, toasts, and routine-builder actions reserve space above bottom navigation.

@@ -144,21 +144,6 @@ try {
         if (a.dataset.page === current) a.setAttribute("aria-current", "page");
         else a.removeAttribute("aria-current");
       });
-      document.querySelector("#breadcrumb").textContent =
-        "Training / " +
-        ({
-          dashboard: "Overview",
-          workouts: "Workouts",
-          session: "Active workout",
-          hub: "Exercise log",
-          history: "History",
-          library: "Exercise library",
-          profile: "Profile",
-          settings: "Settings",
-          database: "Database",
-          account: "Account & sync",
-          routines: "Routine builder",
-        }[page] || "Page");
       document.title =
         (page === "dashboard"
           ? "Overview"

@@ -1,5 +1,5 @@
 // Increment the version after changing app-shell files.
-const CACHE = "traction-shell-v8";
+const CACHE = "traction-shell-v9";
 const ASSETS = [
   "./",
   "./index.html",
@@ -38,6 +38,7 @@ const ASSETS = [
   "./js/recommendations.js",
   "./js/views/dashboard.js",
   "./js/views/workouts.js",
+  "./js/views/workout-card.js",
   "./js/views/hub.js",
   "./js/views/history.js",
   "./js/views/library.js",

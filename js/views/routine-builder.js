@@ -9,7 +9,11 @@ import {
   deleteRoutine,
   copyRoutine,
 } from "../routines.js";
-import { openRoutineDraft, draftKey } from "../routine-draft.js";
+import {
+  openRoutineDraft,
+  draftKey,
+  discardRoutineDraft,
+} from "../routine-draft.js";
 import { routineEditorMarkup, bindRoutineEditor } from "./routine-editor.js";
 import { icon } from "../icons.js";
 const scope = (ctx) => ctx.cloud?.account?.id || "device";
@@ -47,15 +51,35 @@ function editorFor(ctx, action, id) {
   return ctx.routineEditor;
 }
 function library(ctx) {
-  const routines = ctx.routines;
+  const routines = ctx.routines,
+    hasDraft = Boolean(localStorage.getItem(draftKey(scope(ctx))));
   return (
     heading(
       "YOUR PLAN, YOUR PACE",
       "Routines",
       "Build workouts you look forward to showing up for.",
-      `<a class="primary icon-label" href="#routines/new">${icon("plus")} ${localStorage.getItem(draftKey(scope(ctx))) ? "Continue new routine" : "New routine"}</a>`,
+      `<div class="actions routine-entry-actions"><button class="primary" id="new-routine">New routine</button>${hasDraft ? '<a class="secondary" href="#routines/new">Continue draft</a>' : ""}</div>`,
     ) +
-    `<div class="routine-library">${routines.map((r) => `<article class="card routine-card ${ctx.store.state.routine === r.id ? "active-routine" : ""}"><div class="section-head"><span class="routine-symbol">${icon("calendar")}</span><span class="badge ${ctx.store.state.routine === r.id ? "success" : ""}">${ctx.store.state.routine === r.id ? "Active routine" : r.custom ? "Your routine" : "Original routine"}</span></div><h2>${esc(r.name)}</h2><p>${esc(r.subtitle)}</p>${r.custom && SHOW_ROUTINE_SCHEDULE ? `<div class="routine-miniweek">${r.days.map((id, i) => `<span class="${id ? "training-day" : ""}" title="${DAYS[i]}: ${esc(r.workouts.find((w) => w.id === id)?.name || "Rest")}">${DAYS[i].slice(0, 1)}</span>`).join("")}</div>` : `<div class="routine-workout-names">${r.templateIDs.map((id) => `<span>${esc(ctx.templates.find((t) => t.id === id)?.name || id)}</span>`).join("")}</div>`}<div class="actions"><button class="${ctx.store.state.routine === r.id ? "secondary" : "primary"}" data-activate="${esc(r.id)}" ${ctx.store.state.routine === r.id ? "disabled" : ""}>${ctx.store.state.routine === r.id ? "Currently active" : "Use routine"}</button>${r.custom ? `<a class="secondary icon-label" href="#routines/edit/${encodeURIComponent(r.id)}">${icon("edit")} Edit</a>` : ""}<button class="quiet icon-button" data-copy-routine="${esc(r.id)}" aria-label="Make a copy of ${esc(r.name)}">${icon("copy")}</button>${r.custom ? `<button class="quiet icon-button delete-choice" data-delete-routine="${esc(r.id)}" aria-label="Delete ${esc(r.name)}">${icon("trash")}</button>` : ""}</div></article>`).join("")}</div><p class="fine-print">Saved routines sync with your signed-in account. Unfinished builder drafts stay on this device. Editing a routine never changes a workout you already started.</p>`
+    `<div class="routine-library">${routines
+      .map(
+        (r) =>
+          `<article class="card routine-card ${ctx.store.state.routine === r.id ? "active-routine" : ""}"><div class="section-head"><h2>${esc(r.name)}</h2><span class="badge ${ctx.store.state.routine === r.id ? "success" : ""}">${ctx.store.state.routine === r.id ? "Active routine" : r.custom ? "Your routine" : "Original routine"}</span></div><p class="routine-description">${esc(r.subtitle)}</p>${
+            r.custom && SHOW_ROUTINE_SCHEDULE
+              ? `<div class="routine-miniweek">${r.days.map((id, i) => `<span class="${id ? "training-day" : ""}" title="${DAYS[i]}: ${esc(r.workouts.find((w) => w.id === id)?.name || "Rest")}">${DAYS[i].slice(0, 1)}</span>`).join("")}</div>`
+              : `<div class="routine-workout-names">${r.templateIDs
+                  .slice(0, 3)
+                  .map(
+                    (id) =>
+                      `<span>${esc(ctx.templates.find((t) => t.id === id)?.name || id)}</span>`,
+                  )
+                  .join(
+                    "",
+                  )}${r.templateIDs.length > 3 ? `<span>+${r.templateIDs.length - 3} more</span>` : ""}</div>`
+          }<div class="actions"><button class="${ctx.store.state.routine === r.id ? "secondary" : "primary"}" data-activate="${esc(r.id)}" ${ctx.store.state.routine === r.id ? "disabled" : ""}>${ctx.store.state.routine === r.id ? "Currently active" : "Use routine"}</button>${r.custom ? `<a class="secondary icon-label" href="#routines/edit/${encodeURIComponent(r.id)}">${icon("edit")} Edit</a>` : ""}<button class="quiet icon-button" data-copy-routine="${esc(r.id)}" aria-label="Make a copy of ${esc(r.name)}">${icon("copy")}</button>${r.custom ? `<button class="quiet icon-button delete-choice" data-delete-routine="${esc(r.id)}" aria-label="Delete ${esc(r.name)}">${icon("trash")}</button>` : ""}</div></article>`,
+      )
+      .join(
+        "",
+      )}</div><p class="fine-print">Saved routines sync with your signed-in account. Unfinished builder drafts stay on this device. Editing a routine never changes a workout you already started.</p>`
   );
 }
 function setup(draft) {
@@ -89,6 +113,28 @@ export function routinePage(ctx, action, id) {
 }
 export function bindRoutinePage(ctx, action, id) {
   if (!action) {
+    document.querySelector("#new-routine").onclick = () => {
+      const owner = scope(ctx),
+        key = draftKey(owner),
+        existing = localStorage.getItem(key);
+      const start = () => {
+        if (scope(ctx) !== owner)
+          throw new Error(
+            "Your account changed. Reopen Routines before starting a new routine.",
+          );
+        discardRoutineDraft(localStorage, key, existing);
+        ctx.routineEditor = null;
+        location.hash = "#routines/new";
+      };
+      if (existing !== null)
+        modal(
+          "Start a new routine?",
+          "<p>Your current unfinished new-routine draft will be discarded. Saved routines and workout history will stay unchanged.</p>",
+          start,
+          "Discard draft and start new",
+        );
+      else start();
+    };
     document.querySelectorAll("[data-activate]").forEach(
       (button) =>
         (button.onclick = () => {

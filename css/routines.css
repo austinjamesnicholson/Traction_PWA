@@ -24,17 +24,18 @@
 .routine-library {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
+  gap: 14px;
 }
 .routine-card {
   display: flex;
   flex-direction: column;
   margin-bottom: 0;
-  padding: 28px;
+  padding: 18px 20px;
 }
 .routine-card h2 {
-  font-size: 1.45rem;
-  margin-bottom: 8px;
+  font-size: 1.15rem;
+  margin: 0;
+  overflow-wrap: anywhere;
 }
 .routine-card.active-routine {
   border-color: #458981;
@@ -42,7 +43,7 @@
 }
 .routine-card > .actions {
   margin-top: auto;
-  padding-top: 24px;
+  padding-top: 12px;
 }
 .routine-symbol {
   display: grid;
@@ -649,10 +650,10 @@ dialog.exercise-picker {
     gap: 18px;
   }
   .routine-card {
-    padding: 23px;
+    padding: 16px;
   }
   .routine-card h2 {
-    font-size: 1.3rem;
+    font-size: 1.1rem;
   }
   .builder-progress {
     gap: 5px 14px;
@@ -811,4 +812,37 @@ dialog.exercise-picker {
   .builder-actions {
     padding-bottom: 12px;
   }
+}
+
+.routine-card > .section-head {
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 7px;
+}
+.routine-card .routine-description {
+  font-size: 0.8rem;
+  margin: 0 0 10px;
+  overflow-wrap: anywhere;
+}
+.routine-card .routine-workout-names {
+  gap: 5px;
+  margin: 0 0 10px;
+}
+.routine-card .routine-workout-names span {
+  padding: 5px 7px;
+  font-size: 0.75rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+.routine-card .actions {
+  gap: 8px;
+}
+.routine-card .actions > .primary,
+.routine-card .actions > .secondary {
+  font-size: 0.8rem;
+  padding: 9px 12px;
+}
+.routine-entry-actions {
+  margin: 0;
 }

@@ -38,5 +38,4 @@ test("opening the bare app URL renders Overview instead of an empty route", asyn
   await import("../js/app.js");
   assert.match(node("#main").innerHTML, /Keep showing up/);
   assert.equal(document.title, "Overview · Traction");
-  assert.equal(node("#breadcrumb").textContent, "Training / Overview");
 });

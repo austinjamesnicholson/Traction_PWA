@@ -1,6 +1,13 @@
 import { validateRoutines, MAX_WORKOUTS } from "./routines.js";
 export const draftKey = (scope, target = "new") =>
   `traction-routine-draft-v1:${scope || "device"}:${target}`;
+export function discardRoutineDraft(storage, key, expected) {
+  if (storage.getItem(key) !== expected)
+    throw new Error(
+      "This draft changed in another tab. Reopen Routines before starting a new routine.",
+    );
+  storage.removeItem(key);
+}
 export function openRoutineDraft(storage, scope, target, exercises, initial) {
   const key = draftKey(scope, target),
     raw = storage.getItem(key);

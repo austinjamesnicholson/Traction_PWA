@@ -30,7 +30,7 @@ Signing out opens your separate device-only journal. Account caches, including p
 
 - Dashboard with a rolling seven-day calendar, recent sessions, weighted primary/secondary muscle volume, and a Start/Resume workout button.
 - Austin's and Lizzie's routines, all ten original templates, and all 66 exercise definitions.
-- Start/resume/finish workouts, select variations, choose alternates, and skip blocks with notes.
+- Compact workout cards have a top-right Select workout button and expandable numbered exercise previews. Start/resume/finish workouts, select variations, choose alternates, and skip blocks with notes.
 - Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states. New rows keep chronological entry order through batch saves and cloud sync. Changed exercise saves play a short positive chime.
 - Previous-session sets and optional copying into the current draft.
 - Weight-versus-reps and fatigue charts with consistent session colors.
@@ -49,7 +49,7 @@ Open **Routines > New routine**.
 3. Tap **Add exercise** and search or filter by body part, region, and movement. **Add option** stays beside the selected exercises and adds an alternative in the same block; choose one when training. The pencil changes a selection and the trash icon removes it.
 4. Drag a block's grip to reorder it, or use its Up/Down buttons. Review and save, optionally making it active.
 
-Custom routine cards support edit, copy, activate, and delete. Original routines can be copied into an editable plan. Started workouts retain their original exercise plan even if you edit or delete the routine. Unfinished builder drafts restore on the same device and remain separate for each account; only saved routines sync. Day scheduling is hidden for now; its code and previously saved assignments are retained for future use.
+Custom routine cards support edit, copy, activate, and delete. The Routines page always offers New routine; when a draft exists it also offers Continue draft. Starting new asks before discarding the draft. Original routines can be copied into an editable plan. Started workouts retain their original exercise plan even if you edit or delete the routine. Unfinished builder drafts restore on the same device and remain separate for each account; only saved routines sync. Day scheduling is hidden for now; its code and previously saved assignments are retained for future use.
 
 For an existing Supabase installation, apply [supabase/routine-schema.sql](supabase/routine-schema.sql) once; new installations use the updated schema.sql. The hosted Traction_PWA project already has this change.
 
