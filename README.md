@@ -34,7 +34,8 @@ Signing out opens your separate device-only journal. Account caches, including p
 - Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states. New rows keep chronological entry order through batch saves and cloud sync. Changed exercise saves play a short positive chime.
 - Previous-session sets and optional copying into the current draft.
 - Weight-versus-reps and fatigue charts with consistent session colors.
-- Searchable history, filtered library, editable saved records, and profile metrics.
+- History switches between workouts and exercises, with compact filtered exercise cards, progress charts, and editable saved records.
+- Mobile navigation stays at the bottom; icon-only Settings and Profile controls sit at the top right. Skipped workout blocks have orange borders and swapped blocks bright blue borders.
 - JSON backup/restore and duplicate-safe import of the original setEntryLibrary.json.
 
 The original circuit and cardio features were placeholders. Individual exercise logging inside circuit blocks is available, but not automatic circuit rotation, GPS, watch/HealthKit integration, or cardio distance entry. See [REVIEW.md](REVIEW.md).

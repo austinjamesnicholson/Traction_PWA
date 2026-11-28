@@ -8,9 +8,47 @@ import {
   modal,
   notify,
 } from "../ui.js";
+import { library, bindLibrary } from "./library.js";
 import { sessionSets, validSet } from "../model.js";
-export function history(ctx, id) {
+export function historyToggle(mode) {
+  return `<nav class="history-toggle" aria-label="Review history by"><a class="${mode === "workouts" ? "selected" : ""}" href="#history" ${mode === "workouts" ? 'aria-current="page"' : ""}>By workout</a><a class="${mode === "exercises" ? "selected" : ""}" href="#history/exercises" ${mode === "exercises" ? 'aria-current="page"' : ""}>By exercise</a></nav>`;
+}
+export function history(ctx, id, name) {
   const state = ctx.store.state;
+  if (id === "exercises") {
+    const intro = name
+      ? ""
+      : heading(
+          "YOUR TRAINING JOURNAL",
+          "Your training history",
+          "Review by workout or explore your exercise progress.",
+        );
+    const sets = name ? state.sets.filter((s) => s.exerciseName === name) : [];
+    const sessionIDs = [
+      ...new Set(
+        [...sets]
+          .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
+          .map((s) => s.sessionID),
+      ),
+    ];
+    const records =
+      name && ctx.exercises.some((e) => e.name === name)
+        ? `<section class="card"><h2>Saved sets</h2>${
+            sessionIDs
+              .map((id) => {
+                const workout = state.sessions.find((s) => s.sessionID === id);
+                return `<details><summary>${esc(workout.templateName)} &middot; ${date(workout.startedAt)}</summary>${setTable(sessionSets(state, id, name))}</details>`;
+              })
+              .join("") || "<p>No saved sets for this exercise yet.</p>"
+          }</section>`
+        : "";
+    return (
+      intro +
+      historyToggle("exercises") +
+      library(ctx, name, { embedded: true }) +
+      records
+    );
+  }
   if (id) {
     const session = state.sessions.find((s) => s.sessionID === id);
     if (!session) return empty("Workout not found");
@@ -52,17 +90,23 @@ export function history(ctx, id) {
   }
   return (
     heading(
-      "YOUR WORKOUT JOURNAL",
-      "Every session, recorded.",
-      "Review workouts and correct saved entries.",
+      "YOUR TRAINING JOURNAL",
+      "Your training history",
+      "Review by workout or explore your exercise progress.",
     ) +
+    historyToggle("workouts") +
     `<div class="filters"><label class="search-label">Search workouts<input type="search" id="history-search" placeholder="Workout or exercise name"></label><label>Status<select id="history-status"><option value="">All workouts</option value="completed">Completed</option><option value="active">In progress</option></select></label><a class="secondary" href="#database">Review database</a></div><div id="history-list"></div>`
   );
 }
 function setTable(sets) {
   return `<div class="table-scroll"><table><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>Notes</th><th>Time</th><th>Action</th></tr></thead><tbody>${sets.map((s, i) => `<tr><td>${i + 1}</td><td>${s.weight}</td><td>${s.reps}</td><td>${esc(s.notes) || "—"}</td><td>${time(s.timestamp)}</td><td><button class="quiet" data-edit="${esc(s.setID)}">Edit</button></td></tr>`).join("")}</tbody></table></div>`;
 }
-export function bindHistory(ctx, id) {
+export function bindHistory(ctx, id, name) {
+  if (id === "exercises") {
+    bindLibrary(ctx, name);
+    bindEdit(ctx);
+    return;
+  }
   const list = document.querySelector("#history-list");
   if (list) {
     const show = () => {

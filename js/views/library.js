@@ -1,6 +1,6 @@
 import { heading, esc, empty } from "../ui.js";
 import { charts } from "../charts.js";
-export function library(ctx, name) {
+export function library(ctx, name, { embedded = false } = {}) {
   if (name) {
     const exercise = ctx.exercises.find((e) => e.name === name);
     if (!exercise) return empty("Exercise not found");
@@ -9,18 +9,20 @@ export function library(ctx, name) {
         exercise.type.toUpperCase(),
         name,
         `${exercise.majorMuscle}${exercise.minorMuscle ? " · " + exercise.minorMuscle : ""}`,
-        `<a class="secondary" href="#library">Exercise library</a>`,
+        `<a class="secondary" href="#history/exercises">All exercises</a>`,
       ) +
       `<section class="card"><h2>Setup notes</h2><p>${esc(exercise.setupNotes) || "No setup notes for this exercise."}</p></section>` +
       charts(ctx.store.state.sets.filter((s) => s.exerciseName === name))
     );
   }
   return (
-    heading(
-      "KNOW YOUR MOVEMENTS",
-      "Exercise library",
-      `${ctx.exercises.length} exercises from the original Traction library.`,
-    ) +
+    (embedded
+      ? ""
+      : heading(
+          "KNOW YOUR MOVEMENTS",
+          "Exercise library",
+          `${ctx.exercises.length} exercises from the original Traction library.`,
+        )) +
     `<div class="filters"><label class="search-label">Find an exercise<input type="search" id="exercise-search" placeholder="Search exercises or muscles"></label><label>Workout type<select id="exercise-type"><option value="">All types</option>${[
       ...new Set(ctx.exercises.map((e) => e.type)),
     ]
@@ -60,7 +62,7 @@ export function bindLibrary(ctx, name) {
       exercises
         .map(
           (e) =>
-            `<a class="card exercise-card" href="#library/${encodeURIComponent(e.name)}"><span class="eyebrow">${esc(e.type)}</span><h2>${esc(e.name)}</h2><p>${esc(e.majorMuscle)}${e.minorMuscle ? " · " + esc(e.minorMuscle) : ""}</p><span class="exercise-link">View progress</span></a>`,
+            `<a class="card exercise-card" href="#history/exercises/${encodeURIComponent(e.name)}"><div class="row between"><span class="eyebrow">${esc(e.type)}</span><span class="exercise-set-count">${ctx.store.state.sets.filter((s) => s.exerciseName === e.name).length} sets</span></div><h2>${esc(e.name)}</h2><p>${esc(e.majorMuscle)}${e.minorMuscle ? " &middot; " + esc(e.minorMuscle) : ""}</p></a>`,
         )
         .join("") ||
       empty("No matching exercises", "Try a different search or filter.");

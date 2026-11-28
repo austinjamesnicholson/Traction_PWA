@@ -508,7 +508,7 @@
 }
 .builder-actions {
   position: sticky;
-  bottom: 0;
+  bottom: var(--mobile-nav-height, 0px);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -804,5 +804,11 @@ dialog.exercise-picker {
   .add-exercise {
     min-height: 65px;
     padding: 12px;
+  }
+}
+
+@media (max-width: 760px) {
+  .builder-actions {
+    padding-bottom: 12px;
   }
 }

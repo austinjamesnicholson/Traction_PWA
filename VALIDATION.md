@@ -1,3 +1,12 @@
+# Mobile navigation and unified History
+
+- Mobile main navigation is fixed to the bottom with home-indicator padding. Settings and Profile use labeled, icon-only links at the top right; Profile uses a human-bust icon. Content, toasts, and routine-builder actions reserve space above bottom navigation.
+- History switches between workout and exercise views. Exercise progress keeps search and movement/muscle filters, charts, setup notes, and saved sets grouped by session with existing edit controls. Old library links redirect to History's exercise view. The separate Exercise Library navigation entry is removed.
+- Exercise cards have compact padding and no fixed minimum height. On phones they use two columns and wrap their contents.
+- Skipped workout blocks use orange borders; swaps use bright blue, including after logging the alternate. Undoing a skip or clearing a swap removes its state border.
+- npm test: 81 tests pass; new coverage checks History modes, per-session exercise data, edit controls, filtering/progress links, and skipped/swapped states. npm run check verifies 41 offline assets; cache version v8.
+- Only isolated local fixtures were used. No live account or journal records were changed. Physical iPhone layout remains unverified.
+
 # Routine builder refinements
 
 - Routine naming appears above format selection and is editable only in the first step. No workouts-per-week input is needed. Formats supply their distinct starting workouts; Add workout creates more variations, up to 50 rather than a seven-day limit.

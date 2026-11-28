@@ -14,7 +14,6 @@ import {
 } from "./views/workouts.js";
 import { hub, bindHub, hasUnsavedChanges, clearDirty } from "./views/hub.js";
 import { history, bindHistory, database, bindEdit } from "./views/history.js";
-import { library, bindLibrary } from "./views/library.js";
 import {
   profile,
   bindProfile,
@@ -56,7 +55,6 @@ try {
     hub: [hub, bindHub],
     history: [history, bindHistory],
     database: [database, bindEdit],
-    library: [library, bindLibrary],
     profile: [profile, bindProfile],
     settings: [settings, bindSettings],
     routines: [routinePage, bindRoutinePage],
@@ -118,6 +116,14 @@ try {
           location.pathname + location.search + "#profile",
         );
         rawRoute = "profile";
+      }
+      if (rawRoute === "library" || rawRoute.startsWith("library/")) {
+        rawRoute = rawRoute.replace(/^library/, "history/exercises");
+        globalThis.history.replaceState(
+          null,
+          "",
+          location.pathname + location.search + "#" + rawRoute,
+        );
       }
       const [page, ...args] = (rawRoute || "dashboard")
         .split("/")
