@@ -184,6 +184,29 @@ export function createCloud({
       recovery = false;
       onData();
     },
+    async requestRecommendation(payload) {
+      ensure();
+      const owner = engine.account?.id;
+      if (!owner) throw new Error("Sign in to request AI guidance.");
+      const { data, error } = await client.functions.invoke(
+        "workout-recommendation",
+        { body: payload, timeout: 50000 },
+      );
+      if (engine.account?.id !== owner)
+        throw new Error("Your account changed during this request.");
+      if (error) {
+        let message =
+          "AI guidance could not be loaded. Check your connection and try again.";
+        try {
+          const body = await error.context?.json();
+          if (typeof body?.error === "string") message = body.error;
+        } catch {
+          /* do not expose internal error details */
+        }
+        throw new Error(message);
+      }
+      return data;
+    },
     async signOut() {
       ensure();
       // Switch journals immediately, so a response already in flight cannot reappear after logout.

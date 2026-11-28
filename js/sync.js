@@ -4,6 +4,7 @@ import {
   validateState,
   STORAGE_KEY,
 } from "./store.js";
+import { ordered } from "./model.js";
 const copy = (value) => structuredClone(value);
 const canonical = (value) =>
   Array.isArray(value)
@@ -44,6 +45,7 @@ export function mergeDocuments(base, local, remote, prefer) {
       .map((key) => choose(...maps.map((m) => m.get(key)), name + "/" + key))
       .filter(Boolean)
       .map(copy);
+    if (name === "sets") result[name] = ordered(result[name]);
   }
   result.routine = choose(
     base.routine,

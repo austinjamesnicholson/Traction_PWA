@@ -2,5 +2,5 @@
 export const config = {
   supabaseUrl: "https://etngmfpdzialjzucuzvd.supabase.co",
   supabasePublicKey: "sb_publishable_DcU5Ozoqykdxd66SRUOzJA_3zSmLulb",
-  aiEnabled: false,
+  aiEnabled: true,
 };

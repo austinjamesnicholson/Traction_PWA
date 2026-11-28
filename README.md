@@ -24,14 +24,14 @@ Existing device-only workouts stay separate when signing in. To copy them into a
 
 Signing out opens your separate device-only journal. Account caches, including pending changes, stay in this browser for the next sign-in. Use your own device. Clearing browser storage can remove unsynced changes and drafts.
 
-**AI is disabled.** The site does not show AI controls or call an AI service.
+**AI guidance is available for signed-in accounts.** Open an exercise and tap **Get recommendation** to request suggested weights and rep ranges. Relevant saved workout history and notes are sent through Supabase to OpenAI only when requested. Drafts and profile metrics are excluded; guidance never automatically changes logged sets. See [AI_SETUP.md](AI_SETUP.md).
 
 ## Workout features
 
 - Dashboard with a rolling seven-day calendar, completed workouts, saved sets, recent sessions, and weighted primary/secondary muscle volume.
 - Austin's and Lizzie's routines, all ten original templates, and all 66 exercise definitions.
 - Start/resume/finish workouts, select variations, choose alternates, and skip blocks with notes.
-- Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states.
+- Log pounds, reps, and notes; add/remove rows; recover drafts; see saved/modified/unsaved states. New rows keep chronological entry order through batch saves and cloud sync. Changed exercise saves play a short positive chime.
 - Previous-session sets and optional copying into the current draft.
 - Weight-versus-reps and fatigue charts with consistent session colors.
 - Searchable history, filtered library, editable saved records, and profile metrics.
@@ -41,7 +41,7 @@ The original circuit and cardio features were placeholders. Individual exercise 
 
 ## Install
 
-On iPhone, open in **Safari > Share > Add to Home Screen**. In Chrome or Edge, use **Install app**. Open online once to cache the app. Sign in online before using your account offline.
+On iPhone, open in **Safari > Share > Add to Home Screen**. In Chrome or Edge, use **Install app**. Open online once to cache the app. Sign in online before using your account offline. Mobile navigation reserves the iPhone status-area inset in installed mode.
 
 ## Run locally
 
@@ -68,7 +68,7 @@ The GitHub Actions workflow tests and deploys the public files when main changes
 - js/sync.js: account caches, offline queue, three-way merging.
 - js/store.js: journal validation and device-only storage.
 - js/model.js and js/charts.js: workout calculations and charts.
-- js/config.js: public project settings; AI disabled.
+- js/config.js: public project settings and AI feature switch.
 - js/vendor/: pinned Supabase SDK and MIT license.
 - data/: 66 exercises and ten templates.
 - sw.js and js/pwa.js: offline installation and updates.

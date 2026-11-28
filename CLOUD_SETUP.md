@@ -23,7 +23,7 @@ Email authentication and sign-up were checked live: both are enabled, and email 
 
 The client saves through `save_traction_document(expected_revision, document, owner_id)`. The function runs with the caller’s database permissions and checks that `owner_id` matches the signed-in user. This prevents a request saving into a different account after a switch. Stale revisions are rejected with SQLSTATE `40001`, so devices reread and merge before retrying. Documents are limited to 10 MB and do not include exercise drafts.
 
-`supabase/schema.sql` is the deployed schema snapshot. It is for a new empty database, not for rerunning over existing tables. Hosted migration history records the initial schema and owner guard. Older AI function/quota files are retained for reference; they were **not deployed** to this project. The site’s AI switch is false and its controls are absent.
+`supabase/schema.sql` is the deployed schema snapshot. It is for a new empty database, not for rerunning over existing tables. Hosted migration history records the initial schema and owner guard. The signed-in AI function is deployed alongside a private quota table. See AI_SETUP.md and supabase/ai-schema.sql for the current integration.
 
 ## Offline behavior
 
@@ -33,6 +33,6 @@ The app retries on reconnection, when returning to the app, periodically while v
 
 ## Verification
 
-Live checks exercised authenticated save/read/update, cross-account read/update denial, anonymous-user denial, unsigned denial, stale revisions, and the owner guard. Test records and temporary users were rolled back. Security and performance advisors returned no notices. The public Data API returned HTTP 401 to an unsigned request.
+Live checks exercised authenticated save/read/update, cross-account read/update denial, anonymous-user denial, unsigned denial, stale revisions, and the owner guard. Test records and temporary users were rolled back. The initial security and performance checks returned no notices; current advisory findings are documented in VALIDATION.md. The public Data API returned HTTP 401 to an unsigned request.
 
 Automated tests cover auth adapter contracts and simulated two-device behavior. After configuring email URLs, create your account, confirm the email, sign in on two devices, save a workout, and confirm it appears on the other device. Then test offline save/reconnect, sign-out, and password reset.

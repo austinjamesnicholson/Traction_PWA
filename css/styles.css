@@ -1163,7 +1163,9 @@ dialog .actions {
     position: sticky;
     top: 0;
     width: 100%;
-    padding: 14px 18px 0;
+    padding: calc(14px + env(safe-area-inset-top, 0px))
+      max(18px, env(safe-area-inset-right, 0px)) 0
+      max(18px, env(safe-area-inset-left, 0px));
     background: #101b2bf5;
     backdrop-filter: blur(14px);
     border-right: 0;

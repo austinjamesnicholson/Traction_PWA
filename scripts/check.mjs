@@ -13,12 +13,19 @@ const walk = async (dir) =>
     )
   ).flat();
 const files = await walk(root);
-for (const file of files.filter((f) => /\.(js|mjs)$/.test(f))) {
+for (const file of files.filter((f) => /\.(js|mjs|ts)$/.test(f))) {
   execFileSync(process.execPath, ["--check", file], { stdio: "pipe" });
   const text = await readFile(file, "utf8");
   for (const match of text.matchAll(/(?:from\s+|import\s*)['"]([^'"]+)['"]/g))
     if (match[1].startsWith(".")) await access(resolve(file, "..", match[1]));
 }
+// Supabase rejects a byte-order mark in deno.json even when some editors accept it.
+JSON.parse(
+  await readFile(
+    resolve(root, "supabase/functions/workout-recommendation/deno.json"),
+    "utf8",
+  ),
+);
 const manifest = JSON.parse(
   await readFile(resolve(root, "manifest.webmanifest"), "utf8"),
 );

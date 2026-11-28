@@ -181,9 +181,46 @@ test("sign-out returns to device-only data and leaves unsynced account changes s
   await f.cloud.signIn("test@example.invalid", "password-123");
   assert.equal(f.cloud.store.state.profile.age, "30");
 });
-test("AI cannot call a service while disabled", async () => {
+test("AI requires a signed-in account before calling a service", async () => {
   await assert.rejects(
     () => recommend(freshState(), exercises[0], {}),
-    /disabled/,
+    /Sign in/,
+  );
+});
+test("AI uses the existing signed-in Supabase client rather than creating an anonymous account", async (t) => {
+  const f = fixture(t);
+  await f.cloud.start();
+  await f.cloud.signIn("test@example.invalid", "password-123");
+  let requested = false;
+  f.sdk.functions = {
+    async invoke(name, options) {
+      requested = true;
+      assert.equal(name, "workout-recommendation");
+      assert.equal(options.body.exercise, "Bench press");
+      return { data: { headline: "Guidance" }, error: null };
+    },
+  };
+  const result = await f.cloud.requestRecommendation({
+    exercise: "Bench press",
+  });
+  assert.equal(result.headline, "Guidance");
+  assert(requested);
+  assert(!f.calls.some((c) => c[0] === "signup"));
+});
+test("AI server errors are shown with their actionable message", async (t) => {
+  const f = fixture(t);
+  await f.cloud.start();
+  await f.cloud.signIn("test@example.invalid", "password-123");
+  f.sdk.functions = {
+    async invoke() {
+      return {
+        data: null,
+        error: { context: Response.json({ error: "AI setup is incomplete." }) },
+      };
+    },
+  };
+  await assert.rejects(
+    () => f.cloud.requestRecommendation({}),
+    /AI setup is incomplete/,
   );
 });

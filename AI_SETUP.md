@@ -1,22 +1,35 @@
-# Optional AI recommendations
+﻿# AI recommendations
 
-**Disabled in the current site.** The Traction_PWA project is used for accounts and workout storage only. These notes are archived reference for future AI work; no AI server has been deployed to the new project.
+Traction uses the signed-in account to request exercise guidance through the new Supabase project, etngmfpdzialjzucuzvd. The workout-recommendation Edge Function is deployed with JWT verification enabled.
 
-Workout logging, history, charts, installation, and offline use work without a backend.
+## How it works
 
-The client is compatible with the original Traction `workout-recommendation` Supabase Edge Function. Use your **Traction project**, not the Waypoint project. No hosted project was modified during this rebuild.
+1. Open an exercise during an active workout.
+2. Save any sets you want included in the analysis.
+3. Tap **Get recommendation**. The app sends that exercise's saved history and the current workout's skips/alternates through Supabase to OpenAI.
+4. Review suggested warm-up/working weights and rep ranges. Nothing is automatically added to your workout.
 
-1. In `js/config.js`, fill in `supabaseUrl` and `supabasePublicKey`. Use only the public/publishable client key (or legacy anon key). Never put a service-role key or OpenAI API key in browser code.
-2. In the Traction Supabase dashboard, enable anonymous sign-ins. The browser creates an anonymous session only when requesting AI guidance.
-3. If the original server is already deployed and working, reuse it. Otherwise apply the existing `supabase/migrations/20260805000000_ai_recommendation_rate_limits.sql` to that project, configure `OPENAI_API_KEY` as an Edge Function secret, and deploy the included function using your installed CLI’s current deployment instructions. Verify the target project before any deployment. The original SQL and server function are copied for compatibility, not automatically applied.
-4. Confirm the deployed function accepts browser CORS preflight requests. The included function handles OPTIONS and allows authorization, apikey, content-type, and x-client-info headers. Keep authentication and the per-user hourly quota enabled.
-5. Redeploy the PWA after editing configuration. Increment `sw.js`’s cache version so installed clients receive the change.
-6. On a real device, start a workout, open an exercise, and request guidance. Test initial anonymous authentication, a second request with saved sets, explicit refresh, an expired session, offline errors, and the hourly limit. Check the function logs if a request fails.
+AI requires internet access and a signed-in email account. It reuses the normal Traction login; it does not create anonymous accounts. Profile metrics and unsaved draft rows are not sent. Returned recommendations are cached in memory per account, workout, and exercise. A changed workout shows a refresh reminder; navigating or syncing does not automatically buy another request. Concurrent requests for the same exercise share one in-flight call.
 
-The original function enforces 20 requests per anonymous user per hour through `consume_ai_recommendation_quota`. Anonymous-user quotas can be bypassed by creating new users, so monitor usage and apply the project’s supported abuse protection before broad public use.
+## Server settings
 
-The PWA sends the original compact payload shape: exercise/type/muscles/template, current sets, previous session, up to three older session groups from the most recent 12 positive-weight sets, plus current skips and alternates. It accepts warm-up/working recommendations in lb or kg but does not automatically log or apply them. Logged weights remain in pounds, matching the original app.
+In [Edge Function Secrets](https://supabase.com/dashboard/project/etngmfpdzialjzucuzvd/functions/secrets):
 
-Auth tokens are stored separately from workout backups. Restoring a workout backup does not restore an anonymous AI identity. AI errors are shown as errors; this implementation does not fabricate an offline AI answer.
+- OPENAI_API_KEY: the API key from your OpenAI API project, with API billing enabled.
+- OPENAI_MODEL: optional; defaults to gpt-5-mini.
 
-References verified for this implementation: [anonymous sign-ins](https://supabase.com/docs/guides/auth/auth-anonymous), [browser CORS](https://supabase.com/docs/guides/functions/cors), and [Supabase changelog](https://supabase.com/changelog).
+The key is read only by the server. Never put it in js/config.js, GitHub, or chat. The public Supabase project key in js/config.js is separate and is safe for client configuration.
+
+Each signed-in account is limited to 20 requests in a rolling one-hour window. A private quota table and a narrowly scoped server function prevent clients resetting their counters. Failed provider attempts can consume a request. The server validates login, input size/shape, and returned set targets. Unsigned and anonymous callers are rejected. OpenAI requests set store:false; this does not promise zero retention by the provider.
+
+## Source and deployment
+
+- supabase/functions/workout-recommendation/index.ts: runtime entry point.
+- supabase/functions/workout-recommendation/handler.js: authentication, quota, OpenAI handoff, and response validation.
+- supabase/ai-schema.sql: deployed quota schema snapshot.
+- js/recommendations.js: compact workout context and account-scoped cache.
+- js/views/recommendation-card.js: exercise guidance UI.
+
+The quota schema and function have been deployed to the new project. Changing a production secret does not require a PWA rebuild. Changing app code requires a deployment and service-worker cache version update.
+
+A live synthetic test successfully signed in, received four recommended sets from OpenAI, and signed out. The temporary test account and quota were removed. No actual workout history was used for that test.

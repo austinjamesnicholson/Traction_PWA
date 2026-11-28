@@ -1,7 +1,11 @@
 export const uid = () => crypto.randomUUID();
 export const now = () => new Date().toISOString();
 export const ordered = (sets) =>
-  [...sets].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+  [...sets].sort(
+    (a, b) =>
+      new Date(a.timestamp) - new Date(b.timestamp) ||
+      (a.entryOrder ?? 0) - (b.entryOrder ?? 0),
+  );
 export function sessionSets(state, sessionID, exerciseName) {
   return ordered(
     state.sets.filter(

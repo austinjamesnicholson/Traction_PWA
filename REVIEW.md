@@ -1,6 +1,6 @@
 # Review of the original Traction
 
-This describes parity at the initial rebuild. The current PWA now adds Supabase accounts and workout cloud storage, with AI disabled. See CLOUD_SETUP.md for the current connection.
+This describes parity at the initial rebuild. The current PWA now adds Supabase accounts and workout cloud storage, with signed-in AI guidance reconnected. See CLOUD_SETUP.md for the current connection.
 
 Reviewed on November 25, 2026. Original GitHub HEAD verified with `git ls-remote`: `12ac2dcadcb653182f857d5f8d7fa240a510e3a4` (PLIST CORRECTION). This matches the local checkout used for the code review. No original files or Git settings were changed.
 

@@ -1,18 +1,18 @@
 import { heading, esc, date, time, empty, notify, modal } from "../ui.js";
-import { uid, now, sessionSets, previousSets, validSet } from "../model.js";
+import { uid, sessionSets, previousSets, validSet } from "../model.js";
+import { draftRows, newDraft, commitExerciseSets } from "../exercise-log.js";
+import { prepareSaveSound, playSaveChime } from "../sounds.js";
+import {
+  recommendationCard,
+  bindRecommendation,
+} from "./recommendation-card.js";
 import { charts } from "../charts.js";
 let dirty = false;
 export const hasUnsavedChanges = () => dirty;
 export const clearDirty = () => {
   dirty = false;
 };
-const blank = () => ({
-  id: uid(),
-  setID: null,
-  weight: "",
-  reps: "",
-  notes: "",
-});
+const blank = () => newDraft();
 export function hub(ctx, id, name) {
   const session = ctx.store.state.sessions.find((s) => s.sessionID === id),
     exercise = ctx.exercises.find((e) => e.name === name);
@@ -25,17 +25,20 @@ export function hub(ctx, id, name) {
   const saved = sessionSets(ctx.store.state, id, name);
   const key = id + "|" + name;
   ctx.draftKey = key;
-  ctx.rows = structuredClone(
-    ctx.store.state.drafts[key] ||
-      (saved.length
-        ? saved.map((s) => ({
-            id: s.setID,
-            setID: s.setID,
-            weight: s.weight,
-            reps: s.reps,
-            notes: s.notes,
-          }))
-        : [blank()]),
+  ctx.rows = draftRows(
+    structuredClone(
+      ctx.store.state.drafts[key] ||
+        (saved.length
+          ? saved.map((s) => ({
+              id: s.setID,
+              setID: s.setID,
+              weight: s.weight,
+              reps: s.reps,
+              notes: s.notes,
+            }))
+          : [blank()]),
+    ),
+    saved,
   );
   dirty = Boolean(ctx.store.state.drafts[key]);
   return (
@@ -48,7 +51,7 @@ export function hub(ctx, id, name) {
     (exercise.setupNotes
       ? `<p class="setup-note"><strong>Setup notes</strong> ${esc(exercise.setupNotes)}</p>`
       : "") +
-    `<div class="hub-top"><section class="card"><div class="section-head"><div><p class="eyebrow">YOUR LAST SESSION</p><h2>Previous sets</h2></div><span class="muted">${previous.length ? date(previous[0].timestamp) : ""}</span></div>${previous.length ? `<div class="table-scroll"><table><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>Notes</th></tr></thead><tbody>${previous.map((s, i) => `<tr><td>${i + 1}</td><td>${s.weight}</td><td>${s.reps}</td><td>${esc(s.notes) || "—"}</td></tr>`).join("")}</tbody></table></div><button class="quiet" id="copy-previous">Use previous sets as a starting point</button>` : empty("No previous sets", "Your next session will have something to build on.")}</section></div>
+    `<div class="hub-top"><section class="card"><div class="section-head"><div><p class="eyebrow">YOUR LAST SESSION</p><h2>Previous sets</h2></div><span class="muted">${previous.length ? date(previous[0].timestamp) : ""}</span></div>${previous.length ? `<div class="table-scroll"><table><thead><tr><th>Set</th><th>Weight (lb)</th><th>Reps</th><th>Notes</th></tr></thead><tbody>${previous.map((s, i) => `<tr><td>${i + 1}</td><td>${s.weight}</td><td>${s.reps}</td><td>${esc(s.notes) || "—"}</td></tr>`).join("")}</tbody></table></div><button class="quiet" id="copy-previous">Use previous sets as a starting point</button>` : empty("No previous sets", "Your next session will have something to build on.")}</section>${recommendationCard(ctx, id, name)}</div>
     <section class="card logging-card"><div class="section-head"><div><p class="eyebrow">THE WORK HAPPENS HERE</p><h2>Current session</h2></div><span class="badge" id="draft-status">${dirty ? "Draft restored" : "Ready to log"}</span></div><form id="sets-form"><div id="set-rows"></div><p class="form-error" id="set-error" role="alert"></p><div class="actions"><button type="button" id="add-set" class="secondary">＋ Add set</button><button type="button" id="discard" class="quiet">Discard changes</button><button type="submit" class="primary">Save sets</button></div></form><p class="fine-print">Drafts stay on this device until you save or discard them. Use 0 lb for bodyweight sets.</p></section>${charts(ctx.store.state.sets.filter((s) => s.exerciseName === name))}`
   );
 }
@@ -109,8 +112,9 @@ export function bindHub(ctx, id, name) {
     );
   }
   drawRows();
+  bindRecommendation(ctx, id, name);
   document.querySelector("#add-set").onclick = () => {
-    ctx.rows.push(blank());
+    ctx.rows.push(newDraft(ctx.rows, sessionSets(ctx.store.state, id, name)));
     persist();
     drawRows();
     rowsNode.querySelector(".set-row:last-child input").focus();
@@ -123,34 +127,12 @@ export function bindHub(ctx, id, name) {
       return;
     }
     try {
-      const stamp = now();
-      ctx.store.update((s) => {
-        const kept = new Set(ctx.rows.map((r) => r.setID).filter(Boolean));
-        s.sets = s.sets.filter(
-          (r) =>
-            r.sessionID !== id || r.exerciseName !== name || kept.has(r.setID),
-        );
-        for (const row of ctx.rows) {
-          const existing = s.sets.find((r) => r.setID === row.setID);
-          if (existing)
-            Object.assign(existing, {
-              weight: Number(row.weight),
-              reps: Number(row.reps),
-              notes: row.notes,
-            });
-          else
-            s.sets.push({
-              setID: uid(),
-              sessionID: id,
-              exerciseName: name,
-              weight: Number(row.weight),
-              reps: Number(row.reps),
-              notes: row.notes,
-              timestamp: stamp,
-            });
-        }
-        delete s.drafts[ctx.draftKey];
+      const sound = prepareSaveSound();
+      let changed = false;
+      ctx.store.update((state) => {
+        changed = commitExerciseSets(state, id, name, ctx.rows);
       });
+      if (changed) playSaveChime(sound);
       dirty = false;
       ctx.render();
       notify("Sets saved.");
@@ -178,13 +160,16 @@ export function bindHub(ctx, id, name) {
         "Use your previous sets?",
         "<p>This replaces the current draft rows. Nothing is saved as a completed set until you select Save sets.</p>",
         () => {
-          ctx.rows = previousSets(ctx.store.state, name, id).map((s) => ({
-            id: uid(),
-            setID: null,
-            weight: s.weight,
-            reps: s.reps,
-            notes: "",
-          }));
+          ctx.rows = draftRows(
+            previousSets(ctx.store.state, name, id).map((s) => ({
+              id: uid(),
+              setID: null,
+              weight: s.weight,
+              reps: s.reps,
+              notes: "",
+            })),
+            sessionSets(ctx.store.state, id, name),
+          );
           persist();
           drawRows();
         },

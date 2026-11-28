@@ -56,6 +56,8 @@ export function validateState(state, exercises, templates) {
         !sessionIDs.has(s.sessionID) ||
         !exercises.some((e) => e.name === s.exerciseName) ||
         !validSet(s.weight, s.reps) ||
+        (s.entryOrder != null &&
+          (!Number.isSafeInteger(s.entryOrder) || s.entryOrder < 0)) ||
         typeof s.notes !== "string" ||
         !Number.isFinite(Date.parse(s.timestamp)),
     )

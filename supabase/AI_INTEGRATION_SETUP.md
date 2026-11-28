@@ -1,5 +1,3 @@
-﻿# AI integration
+# AI integration
 
-See [../AI_SETUP.md](../AI_SETUP.md) for browser configuration and the existing server deployment requirements.
-
-This folder contains the original Traction AI function and hourly quota migration. No hosted changes are applied automatically. Never deploy against the Waypoint project for this app.
+See [../AI_SETUP.md](../AI_SETUP.md) for the current signed-in AI flow, server secrets, deployed quota schema, and validation. The new Traction_PWA project hosts the active function.

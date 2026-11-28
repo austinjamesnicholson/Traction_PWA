@@ -1,6 +1,7 @@
 import { STORAGE_KEY } from "./store.js";
 import { createCloud } from "./cloud.js";
 import { account, bindAccount } from "./views/account.js";
+import { clearRecommendations } from "./recommendations.js";
 import { empty, notify, download } from "./ui.js";
 import { setupPWA, activateUpdate } from "./pwa.js";
 import { dashboard } from "./views/dashboard.js";
@@ -84,6 +85,7 @@ try {
       if (!started) return;
       const next = cloud.account?.id || null;
       if (owner !== next) {
+        clearRecommendations();
         owner = next;
         clearDirty();
         location.hash = "#account";
