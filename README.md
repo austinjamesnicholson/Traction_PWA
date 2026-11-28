@@ -58,7 +58,7 @@ npm test
 npm run check
 ```
 
-The GitHub Actions workflow tests and deploys the public files when main changes. GitHub Pages must use **GitHub Actions** as its source.
+The GitHub Actions workflow runs checks when main changes and respects the existing Pages publishing mode. With branch publishing, GitHub publishes main automatically. With Actions publishing, the workflow uploads and deploys the checked public files.
 
 ## Code layout
 

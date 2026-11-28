@@ -30,11 +30,31 @@ jobs:
           cp index.html manifest.webmanifest sw.js dist/
           cp -r css js data icons dist/
           touch dist/.nojekyll
+      - name: Check Pages publishing mode
+        id: pages-mode
+        env:
+          PAGES_TOKEN: ${{ github.token }}
+        run: |
+          node --input-type=module <<'JS'
+          import { appendFileSync } from 'node:fs';
+          const response = await fetch(`${process.env.GITHUB_API_URL}/repos/${process.env.GITHUB_REPOSITORY}/pages`, {headers: {
+            Authorization: `Bearer ${process.env.PAGES_TOKEN}`,
+            Accept: 'application/vnd.github+json'
+          }});
+          if (!response.ok) throw new Error(`Pages configuration check failed (${response.status})`);
+          const pages = await response.json();
+          const branchPublishing = pages.build_type === 'legacy' || (pages.build_type !== 'workflow' && Boolean(pages.source?.branch));
+          appendFileSync(process.env.GITHUB_OUTPUT, `branch_publishing=${branchPublishing}\n`);
+          console.log(branchPublishing ? 'GitHub Pages publishes the configured branch; validation is complete.' : 'Publishing through the Actions Pages artifact.');
+          JS
       - uses: actions/configure-pages@v5
+        if: steps.pages-mode.outputs.branch_publishing != 'true'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.pages-mode.outputs.branch_publishing != 'true'
         with:
           path: dist
       - name: Wait for deployment artifact metadata
+        if: steps.pages-mode.outputs.branch_publishing != 'true'
         env:
           PAGES_TOKEN: ${{ github.token }}
         run: |
@@ -58,4 +78,5 @@ jobs:
           JS
       - name: Deploy
         id: deployment
+        if: steps.pages-mode.outputs.branch_publishing != 'true'
         uses: actions/deploy-pages@v4
